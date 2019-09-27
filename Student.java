@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -12,8 +13,7 @@
  */
 public class Student {
     // FIELDS
-    private String first;
-    private String last;
+    private Name name;
     private int score;
     private String studentID;
 
@@ -27,29 +27,16 @@ public class Student {
      *            The last name of the student.
      */
     public Student(String first, String last) {
-        this.first = first;
-        this.last = last;
+        name = new Name(first, last);
         this.score = 0;
     }
 
 
     /**
-     * Getter method for the first name.
-     * 
-     * @return field variable first.
+     * Getter method for the Name field.
      */
-    public String getFirst() {
-        return this.first;
-    }
-
-
-    /**
-     * Getter method for the last name.
-     * 
-     * @return field variable last.
-     */
-    public String getLast() {
-        return this.last;
+    public Name getName() {
+        return name;
     }
 
 
@@ -59,7 +46,7 @@ public class Student {
      * @return field variable score.
      */
     public int getScore() {
-        return this.score;
+        return score;
     }
 
 
@@ -91,7 +78,7 @@ public class Student {
      * @return the studentID field variable.
      */
     public String getStudentID() {
-        return this.studentID;
+        return studentID;
     }
 
 
@@ -104,9 +91,45 @@ public class Student {
     @Override
     public String toString() {
         String ret = null;
-        ret = this.studentID + ", " + this.first + " " + this.last + ", "
-            + "score = " + this.score;
+        ret = studentID + ", " + name.getFirst() + " " + name.getLast() + ", "
+            + "score = " + score;
         return ret;
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+
+        // CASE 1
+        if (object == null) {
+            return false;
+        }
+        // CASE 2
+        else if (this == object) {
+            return true;
+        }
+        // CASE 3
+        else if (this.getClass() == object.getClass()) {
+            Student other = (Student)object;
+
+            if (this.getScore() != other.getScore()) {
+                return false;
+            }
+
+            else if (this.studentID != other.getStudentID()) {
+                return false;
+            }
+
+            else if (this.name.compareTo(other.getName()) != 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+
+        }
+
+        return false;
     }
 
 }
