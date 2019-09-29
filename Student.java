@@ -1,8 +1,12 @@
-
 /**
+ * // Virginia Tech Honor Code Pledge:
+ * //
+ * // As a Hokie, I will conduct myself with honor and integrity at all times.
+ * // I will not lie, cheat, or steal, nor will I accept the actions of those
+ * // who do.
+ * //
  * 
  */
-
 /**
  * This is the student class, designed to hold student information and return it
  * upon invocation.
@@ -15,7 +19,8 @@ public class Student {
     // FIELDS
     private Name name;
     private int score;
-    private String studentID;
+    private String pid;
+    private String grade;
 
 
     /**
@@ -26,9 +31,11 @@ public class Student {
      * @param last
      *            The last name of the student.
      */
-    public Student(String first, String last) {
+    public Student(String pid, String first, String last) {
+        this.pid = pid;
         name = new Name(first, last);
-        this.score = 0;
+        score = 0;
+        grade = "F";
     }
 
 
@@ -62,23 +69,12 @@ public class Student {
 
 
     /**
-     * Setter method for the studentID field variable.
-     * 
-     * @param studentID
-     *            the String to update the field variable with.
-     */
-    public void setStudentID(String studentID) {
-        this.studentID = studentID;
-    }
-
-
-    /**
-     * Getter method for the studentID field variable.
+     * Getter method for the pid field variable.
      * 
      * @return the studentID field variable.
      */
-    public String getStudentID() {
-        return studentID;
+    public String getPID() {
+        return pid;
     }
 
 
@@ -91,8 +87,8 @@ public class Student {
     @Override
     public String toString() {
         String ret = null;
-        ret = studentID + ", " + name.getFirst() + " " + name.getLast() + ", "
-            + "score = " + score;
+        ret = pid + ", " + name.getFirst() + " " + name.getLast() + ", "
+            + "score = " + score + "\n";
         return ret;
     }
 
@@ -116,7 +112,7 @@ public class Student {
                 return false;
             }
 
-            else if (this.studentID != other.getStudentID()) {
+            else if (this.pid != other.getPID()) {
                 return false;
             }
 
