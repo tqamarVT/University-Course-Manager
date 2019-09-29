@@ -27,12 +27,14 @@ public class StudentIndex<T> {
                                    // about the type cast being unsafe.
     public StudentIndex() {
         array = (T[])new Object[20];
+        arrEnd = 0;
         size = 0;
         capacity = 20;
 
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Pull an object from the given index.
      * 
@@ -40,10 +42,16 @@ public class StudentIndex<T> {
      *            The index from which to return the object.
      */
     public T getAt(int index) {
-        return array[index];
+        if (array[index] == null) {
+            return null;
+        }
+        else {
+            return array[index];
+        }
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Add an element to the end of the array.
      * 
@@ -59,6 +67,7 @@ public class StudentIndex<T> {
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Remove and return an element from the given index.
      * 
@@ -78,6 +87,7 @@ public class StudentIndex<T> {
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Returns the current size of the array.
      * 
@@ -88,6 +98,7 @@ public class StudentIndex<T> {
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Returns the current capacity of the array.
      * 
@@ -98,6 +109,7 @@ public class StudentIndex<T> {
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Expands the capacity of the studentArray by doubling its current
      * capacity.

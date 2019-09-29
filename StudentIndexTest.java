@@ -1,7 +1,12 @@
 /**
+ * // Virginia Tech Honor Code Pledge:
+ * //
+ * // As a Hokie, I will conduct myself with honor and integrity at all times.
+ * // I will not lie, cheat, or steal, nor will I accept the actions of those
+ * // who do.
+ * //
  * 
  */
-
 /**
  * Test class for the StudentIndex class.
  * 
@@ -21,6 +26,7 @@ public class StudentIndexTest extends student.TestCase {
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Tests the constructor for the StudentIndex class.
      */
@@ -31,6 +37,7 @@ public class StudentIndexTest extends student.TestCase {
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Tests the add method for the StudentIndex class, also tests the private
      * expand capacity method.
@@ -38,20 +45,26 @@ public class StudentIndexTest extends student.TestCase {
     public void testAdd() {
         // CASE 1: NOT AT MAX CAPACITY
         assertEquals(testStudentIndex.getSize(), 0);
-        testStudentIndex.add(new Student("Rick", "Roll"));
+        testStudentIndex.add(new Student("01000", "Rick", "Roll"));
         assertEquals(testStudentIndex.getSize(), 1);
 
         // CASE 2: AT MAX CAPACITY
         for (int i = 0; i < 19; i++) {
             testStudentIndex.add(new Student(String.valueOf(i), String.valueOf(
-                i)));
+                i), String.valueOf(i)));
         }
         assertEquals(testStudentIndex.getCapacity(), 20);
-        testStudentIndex.add(new Student("NeverGonna", "GiveYouUp"));
+        assertEquals(testStudentIndex.getSize(), 20);
+        testStudentIndex.remove(0);
+        assertEquals(testStudentIndex.getCapacity(), 20);
+        assertEquals(testStudentIndex.getSize(), 19);
+        testStudentIndex.add(new Student("01002", "NeverGonna", "GiveYouUp"));
         assertEquals(testStudentIndex.getCapacity(), 40);
+        assertEquals(testStudentIndex.getSize(), 20);
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Tests the remove method for the StudentIndex class.
      */
@@ -61,9 +74,9 @@ public class StudentIndexTest extends student.TestCase {
         assertNull(temp);
 
         // CASE 2: NON-NULL CASE
-        testStudentIndex.add(new Student("Your", "Mom"));
-        testStudentIndex.add(new Student("Obie", "Wan"));
-        temp = new Student("Bill", "Clinton");
+        testStudentIndex.add(new Student("01003", "Your", "Mom"));
+        testStudentIndex.add(new Student("01004", "Obie", "Wan"));
+        temp = new Student("01005", "Bill", "Clinton");
         testStudentIndex.add(temp);
         assertEquals(testStudentIndex.getSize(), 3);
         Student temp2 = testStudentIndex.remove(2);
@@ -73,6 +86,7 @@ public class StudentIndexTest extends student.TestCase {
     }
 
 
+    // ----------------------------------------------------------
     /**
      * Tests the getAt method for the StudentIndex class.
      */
@@ -82,8 +96,8 @@ public class StudentIndexTest extends student.TestCase {
         assertNull(temp);
 
         // CASE 2: NON-NULL CASE
-        testStudentIndex.add(new Student("Pizza", "Gate"));
+        testStudentIndex.add(new Student("01006", "Pizza", "Gate"));
         temp = testStudentIndex.getAt(0);
-        assertTrue(temp.equals(new Student("Pizza", "Gate")));
+        assertTrue(temp.equals(new Student("01006", "Pizza", "Gate")));
     }
 }
