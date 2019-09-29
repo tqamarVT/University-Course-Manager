@@ -185,7 +185,7 @@ public class BST<K extends Comparable<K>, V extends Comparable<V>> {
      *            the node that roots the subtree which could be inserted into.
      * @return the new root of the subtree.
      * @throws IllegalArgumentException
-     *             if x is already present.
+     *             if node with key and value is already present.
      */
     private Node<K, V> insert(K key, V value, Node<K, V> node) {
         if (node == null) {
@@ -206,7 +206,7 @@ public class BST<K extends Comparable<K>, V extends Comparable<V>> {
                 node.setRight(insert(key, value, node.getRight()));
             }
             else {
-                throw new IllegalArgumentException("Duplicate Item!");
+                throw new IllegalArgumentException();
             }
         }
         return node;
@@ -219,6 +219,8 @@ public class BST<K extends Comparable<K>, V extends Comparable<V>> {
      *
      * @param key
      *            the key of the node to remove.
+     * @param value
+     *            the value of the node to remove.
      * @param node
      *            the node that roots the subtree from which a node could
      *            be removed.

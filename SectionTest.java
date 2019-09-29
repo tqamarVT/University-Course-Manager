@@ -206,4 +206,31 @@ public class SectionTest extends student.TestCase {
 
     }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Tests the dumpSection command.
+     */
+    public void testDumpSection() {
+        testSection.dumpSection();
+        // Once output format is released, come back and do a proper test.
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Tests the grade command.
+     */
+    public void testGrade() {
+        testSection.search("0001");
+        testSection.score(96);
+        testSection.search("0006");
+        testSection.score(86);
+        testSection.search("0008");
+        testSection.score(46);
+        testSection.search("0010");
+        testSection.score(20000);
+        testSection.grade();
+    }
+
 }

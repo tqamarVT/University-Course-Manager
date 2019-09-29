@@ -69,6 +69,17 @@ public class Student {
 
 
     /**
+     * Setter method for the score.
+     * 
+     * @param score
+     *            field variable score
+     */
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+
+    /**
      * Getter method for the pid field variable.
      * 
      * @return the studentID field variable.

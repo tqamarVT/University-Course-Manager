@@ -85,4 +85,15 @@ public class Name implements Comparable<Name> {
         return 0;
     }
 
+
+    /**
+     * toString method for the class.
+     * 
+     * @return String representation of the object.
+     */
+    public String toString() {
+        return this.first + " " + this.last;
+
+    }
+
 }

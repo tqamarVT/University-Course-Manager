@@ -220,6 +220,41 @@ public class Section {
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * For each BST node in each BST, prints that node's brief student record
+     * (pid #, name, and score). After all three BSTs are printed, prints out
+     * the size of the data.
+     */
+    public void dumpSection() {
+        System.out.print("Section" + " " + sectionNumber + " " + "dump:\n");
+        pidTree.inOrderTraversal();
+        nameTree.inOrderTraversal();
+        scoreTree.inOrderTraversal();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Goes through the current section and check the score of each
+     * student,assign corresponding grades.
+     * 
+     */
+    public void grade() {
+        for (int i = 0; i <= index; i++) {
+            Student temp = dataArray.getAt(index);
+            if (temp == null) {
+                continue;
+            }
+            else {
+                temp.setGrade(Grades.getGrade(temp.getScore()).returnGrade());
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+
     /**
      * Getter method for the index variable.
      * 
@@ -229,6 +264,8 @@ public class Section {
         return index;
     }
 
+
+    // ----------------------------------------------------------
 
     /**
      * Helper method for the remove by name command used to verify that this
