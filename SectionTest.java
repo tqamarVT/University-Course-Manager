@@ -229,8 +229,10 @@ public class SectionTest extends student.TestCase {
         testSection.search("0008");
         testSection.score(46);
         testSection.search("0010");
-        testSection.score(20000);
+        testSection.score(36);
         testSection.grade();
+        testSection.list("A");
+        
     }
 
 }

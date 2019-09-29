@@ -12,22 +12,21 @@
 public enum Grades {
 
     A(100, "A"),
-    AMINUS(85, "A-"),
-    BPLUS(80, "B+"),
-    B(75, "B"),
-    BMINUS(70, "B-"),
-    CPLUS(65, "C+"),
-    C(60, "C"),
-    CMINUS(57, "C-"),
-    DPLUS(55, "D+"),
-    D(52, "D"),
-    DMINUS(50, "D-"),
-    F(0, "F"),
-    INVALIDP(Integer.MAX_VALUE, "INVALID SCORE"),
-    INVALIDN(Integer.MIN_VALUE, "INVALID SCORE");
+    AMINUS(89, "A-"),
+    BPLUS(85, "B+"),
+    B(79, "B"),
+    BMINUS(75, "B-"),
+    CPLUS(69, "C+"),
+    C(65, "C"),
+    CMINUS(59, "C-"),
+    DPLUS(57, "D+"),
+    D(55, "D"),
+    DMINUS(52, "D-"),
+    F(49, "F");
 
     private final int score;
     private final String letterGrade;
+    private int count;
 
 
     /**
@@ -41,6 +40,7 @@ public enum Grades {
     private Grades(int score, String letterGrade) {
         this.score = score;
         this.letterGrade = letterGrade;
+        this.count = 0;
     }
 
 
@@ -52,7 +52,7 @@ public enum Grades {
      * @return corresponding letter grade
      */
     public static Grades getGrade(int score) {
-        Grades grade = INVALIDP;
+        Grades grade = F;
         for (Grades g : values()) {
             if (score <= g.score) {
                 grade = g;
@@ -69,5 +69,52 @@ public enum Grades {
      */
     public String returnGrade() {
         return letterGrade;
+    }
+
+
+    /**
+     * Updates the count of every enumerated variable.
+     * 
+     * @param letterGrade
+     *            letterGrade corresponding to the enumeration variable to
+     *            update.
+     */
+    public static void updateCount(String letterGrade) {
+        for (Grades g : values()) {
+            if (letterGrade.equalsIgnoreCase(g.letterGrade)) {
+                g.count++;
+            }
+        }
+    }
+
+
+    /**
+     * 
+     * @return
+     */
+    public String returnSpecificCount(String grade) {
+        String ret = null;
+        for (Grades g : values()) {
+            if (g.letterGrade.equalsIgnoreCase(grade)) {
+                ret = String.valueOf(g.count);
+            }
+            else {
+                continue;
+            }
+        }
+        return ret;
+    }
+
+
+    /**
+     * 
+     * @return
+     */
+    public String returnTotalCount() {
+        String ret = null;
+        for (Grades g : values()) {
+            ret = g.returnGrade() + " " + String.valueOf(g.count) + "\n";
+        }
+        return ret;
     }
 }

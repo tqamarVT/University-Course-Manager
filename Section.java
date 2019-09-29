@@ -231,6 +231,7 @@ public class Section {
         pidTree.inOrderTraversal();
         nameTree.inOrderTraversal();
         scoreTree.inOrderTraversal();
+        scoreFlag = false;
     }
 
 
@@ -242,7 +243,7 @@ public class Section {
      */
     public void grade() {
         for (int i = 0; i <= index; i++) {
-            Student temp = dataArray.getAt(index);
+            Student temp = dataArray.getAt(i);
             if (temp == null) {
                 continue;
             }
@@ -250,6 +251,34 @@ public class Section {
                 temp.setGrade(Grades.getGrade(temp.getScore()).returnGrade());
             }
         }
+        scoreFlag = false;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Lists all students that are in particular grade level(s) given by
+     * <grade>.
+     * Then prints out the total number of students listed.
+     * 
+     * @param grade
+     *            The grade to gather data on.
+     * 
+     */
+    public void list(String grade) {
+
+        for (int i = 0; i <= index; i++) {
+            Student temp = dataArray.getAt(i);
+            if (temp == null) {
+                continue;
+            }
+            else {
+                if (temp.getGrade().equalsIgnoreCase(grade)) {
+                    System.out.print(temp.toString());
+                }
+            }
+        }
+
     }
 
 
