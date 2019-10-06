@@ -1,28 +1,54 @@
+
 /**
- * The Name class is used to compare names by last name and to format names.
  * 
- * @author Peter Dolan
- * @version 9/13/19
+ */
+
+/**
+ * This class serves as the Key class for the BST in this project.
+ * 
+ * @author Taimoor Qamar
+ * @version 2019.09.24
  *
  */
+
 public class Name implements Comparable<Name> {
-    private String firstName;
-    private String lastName;
+
+    // FIELDS
+    private String first;
+    private String last;
 
 
     /**
-     * Makes a new name with the first letter capitalized and the following
-     * letters lowercase.
+     * The constructor method for the Name class.
      * 
      * @param first
-     *            first name
+     *            First name
      * @param last
-     *            last name
+     *            Last name
      */
-    public Name(String first, String last) { // unsure if I should check if args
-                                             // first and last are null
-        firstName = Name.format(first);
-        lastName = Name.format(last);
+    public Name(String first, String last) {
+        this.first = Name.format(first);
+        this.last = Name.format(last);
+    }
+
+
+    /**
+     * Getter method for the field variable first.
+     * 
+     * @return field variable first.
+     */
+    public String getFirst() {
+        return this.first;
+    }
+
+
+    /**
+     * Getter method for the field variable last.
+     * 
+     * @return field variable last.
+     */
+    public String getLast() {
+        return this.last;
     }
 
 
@@ -48,53 +74,48 @@ public class Name implements Comparable<Name> {
 
 
     /**
-     * Compares this name with other name. Checks last name before first name.
+     * compareTo method for the Name class. Compares the two field String
+     * variables first and last.
      * 
-     * @param other
-     *            the name with which we compare
-     * @return this - other
-     *         (i.e. negative if this is before other, 0 if same, and positive
-     *         if this is after other in alphabet)
+     * @return an integer value, based on the result of the comparison.
      */
     @Override
-    public int compareTo(Name other) {
-        if (this.lastName.equals(other.lastName)) {
-            return this.firstName.compareTo(other.firstName);
+    public int compareTo(Name otherName) {
+        String thisFirst = this.first.toLowerCase();
+        String thisLast = this.last.toLowerCase();
+        String otherFirst = otherName.getFirst().toLowerCase();
+        String otherLast = otherName.getLast().toLowerCase();
+
+        if (thisLast.compareTo(otherLast) < 0) {
+            return -1;
         }
-        return this.lastName.compareTo(other.lastName);
+        else if (thisLast.compareTo(otherLast) > 0) {
+            return 1;
+        }
+
+        else if (thisLast.compareTo(otherLast) == 0) {
+            if (thisFirst.compareTo(otherFirst) < 0) {
+
+                return -1;
+            }
+            else if (thisFirst.compareTo(otherFirst) > 0) {
+                return 1;
+            }
+
+        }
+
+        return 0;
     }
 
 
     /**
-     * Returns a string representation of name (i.e. firstName lastName)
+     * toString method for the class.
      * 
-     * @return a string representation of name (e.g. Peter Dolan)
+     * @return String representation of the object.
      */
-    @Override
     public String toString() {
-        return firstName + " " + lastName;
+        return this.first + " " + this.last;
+
     }
 
-
-    /**
-     * Checks if other is a Name with the exact same first name and last name
-     * 
-     * @param other
-     *            the Object with which this is compared
-     * @return true if yes and false if no
-     */
-    @Override
-    public boolean equals(Object other) { // because only 3 sections, lol
-        if (other == null) {
-            return false;
-        }
-        if (this == other) {
-            return true;
-        }
-        if (this.getClass() == other.getClass()) {
-            Name s = (Name)other;
-            return this.compareTo(s) == 0;
-        }
-        return false;
-    }
 }
