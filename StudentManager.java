@@ -35,7 +35,7 @@ public class StudentManager {
      * @return the found Student or null or not found
      */
     public Student find(String pid) {
-        return findHelp(pid, 0, sortedArray.length - 1);
+        return findHelp(pid, -1, sortedArray.length);
     }
 
 
@@ -45,15 +45,15 @@ public class StudentManager {
      * @param pid
      *            looking for element with this pid
      * @param min
-     *            we know the element's index is either >= to this index or the
+     *            we know the element's index is either > to this index or the
      *            element is not in the array
      * @param max
-     *            we know the element's index is either <= to this index or the
+     *            we know the element's index is either < to this index or the
      *            element is not in the array
      * @return found DetailedStudent or null if not found
      */
     private DetailedStudent findHelp(String pid, int min, int max) {
-        if (min >= max) {
+        if (max - min < 2) {
             return null;
         }
         if (sortedArray[(min + max) / 2].getPID().compareTo(pid) > 0) {
