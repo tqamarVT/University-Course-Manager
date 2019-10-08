@@ -29,7 +29,7 @@ public class CourseStudent extends Student {
         String firstName,
         String lastName,
         int score) {
-        super(String.valueOf(stuID), firstName, lastName);
+        super(firstName, lastName, stuID);
         sectionId = secID;
         setScore(score);
     }
@@ -59,7 +59,7 @@ public class CourseStudent extends Student {
         String lastName,
         int score,
         String grade) {
-        super(String.valueOf(stuID), firstName, lastName);
+        super(firstName, lastName, stuID);
         sectionId = secID;
         setScore(score);
         setGrade(grade);
@@ -86,7 +86,7 @@ public class CourseStudent extends Student {
         String firstName,
         String lastName,
         String grade) {
-        super(String.valueOf(stuID), firstName, lastName);
+        super(firstName, lastName, stuID);
         sectionId = secID;
         setGrade(grade);
     }
@@ -109,7 +109,7 @@ public class CourseStudent extends Student {
         int stuID,
         String firstName,
         String lastName) {
-        super(String.valueOf(stuID), firstName, lastName);
+        super(firstName, lastName, stuID);
         sectionId = secID;
     }
 

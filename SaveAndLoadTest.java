@@ -56,19 +56,6 @@ public class SaveAndLoadTest extends TestCase {
         // basic testing:
         DetailedStudent[] basicSArray = { new DetailedStudent(123456789,
             "Peter", "Gorman", "Dolan") };
-
-        DetailedStudent[] testBasicS = basicS.loadStudentData();
-        /**
-         * for (DetailedStudent d : testBasicS) {
-         * System.out.println(d.getPID() + " " + d.getName().getFirst() + " "
-         * + d.getMiddleName() + " " + d.getName().getLast());
-         * }
-         * 
-         * for (DetailedStudent d : basicSArray) {
-         * System.out.println(d.getPID() + " " + d.getName().getFirst() + " "
-         * + d.getMiddleName() + " " + d.getName().getLast());
-         * }
-         */
         assertTrue(Arrays.equals(basicS.loadStudentData(), basicSArray));
         DetailedStudent[] twoLineSArray = { new DetailedStudent(123456789,
             "Peter", "Gorman", "Dolan"), new DetailedStudent(987654321, "Peter",
@@ -152,29 +139,29 @@ public class SaveAndLoadTest extends TestCase {
             new File(complicatedBinS.getFilename()).delete();
             /**
              * for (int a = 0; a < test1.length; a++) {
-             * System.out.println(test1[a].getPID() + " " + test1[a].getName()
-             * .getFirst() + " " + test1[a].getMiddleName() + " "
-             * + test1[a].getName().getLast());
+             * System.out.println(test1[a].getPID() + " " +
+             * test1[a].getFirstName()
+             * + " " + test1[a].getMiddleName() + " " + test1[a]
+             * .getLastName());
              * }
              * for (int a = 0; a < basicSArray.length; a++) {
-             * System.out.println(basicSArray[a].getPID() + " "
-             * + basicSArray[a].getName().getFirst() + " " + basicSArray[a]
-             * .getMiddleName() + " " + basicSArray[a].getName()
-             * .getLast());
+             * System.out.println(basicSArray[a].getPID() + " " + basicSArray[a]
+             * .getFirstName() + " " + basicSArray[a].getMiddleName() + " "
+             * + basicSArray[a].getLastName());
              * }
              * for (int a = 0; a < test1.length; a++) {
              * System.out.println(test1[a].equals(basicSArray[a]));
              * }
              * for (int a = 0; a < test2.length; a++) {
-             * System.out.println(test2[a].getPID() + " " + test2[a].getName()
-             * .getFirst() + " " + test2[a].getMiddleName() + " "
-             * + test2[a].getName().getLast());
+             * System.out.println(test2[a].getPID() + " " +
+             * test2[a].getFirstName()
+             * + " " + test2[a].getMiddleName() + " " + test2[a]
+             * .getLastName());
              * }
              * for (int a = 0; a < twoLineSArray.length; a++) {
              * System.out.println(twoLineSArray[a].getPID() + " "
-             * + twoLineSArray[a].getName().getFirst() + " "
-             * + twoLineSArray[a].getMiddleName() + " " + twoLineSArray[a]
-             * .getName().getLast());
+             * + twoLineSArray[a].getFirstName() + " " + twoLineSArray[a]
+             * .getMiddleName() + " " + twoLineSArray[a].getLastName());
              * }
              * for (int a = 0; a < test2.length; a++) {
              * System.out.println(test2[a].equals(twoLineSArray[a]));
@@ -184,15 +171,6 @@ public class SaveAndLoadTest extends TestCase {
             assertTrue(Arrays.equals(test2, twoLineSArray));
             assertTrue(Arrays.equals(test3, complicatedSArray));
         }
-    }
-
-
-    /**
-     * need to call testSaveAndLoadStudentData() twice: once to save, and once
-     * to load. This loads and deletes the files.
-     */
-    public void testSaveAndLoadStudentDataAgain() {
-        // testSaveAndLoadStudentData();
     }
 
 

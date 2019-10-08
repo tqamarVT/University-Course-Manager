@@ -73,8 +73,7 @@ public class SaveAndLoad {
                 System.out.println(".csv File not found to load student data");
                 return null;
             }
-            while (fileScanner.hasNext()) { // what about blank lines? Prob
-                                            // won't happen
+            while (fileScanner.hasNext()) { // what about blank lines?
                 String line = fileScanner.nextLine();
                 // System.out.println(line);
                 readLineForLSD(line, studs);
@@ -91,50 +90,32 @@ public class SaveAndLoad {
                 String firstName = null;
                 String middleName = null; // I recognize I did not do this
                 String lastName = null; // how the spec said
-                int currentIndex = 14;
-                // System.out.println("numRecords: " + numRecords);
-                for (int i = 0; i < numRecords; i++) {
-                    pid = ((0xFF & bytes[currentIndex++]) << 56) | ((0xFF
-                        & bytes[currentIndex++]) << 48) | ((0xFF
-                            & bytes[currentIndex++]) << 40) | ((0xFF
-                                & bytes[currentIndex++]) << 32) | ((0xFF
-                                    & bytes[currentIndex++]) << 24) | ((0xFF
-                                        & bytes[currentIndex++]) << 16) | ((0xFF
-                                            & bytes[currentIndex++]) << 8)
-                        | (0xFF & bytes[currentIndex++]);
-                    byte[] fnBytes = new byte[16];
-                    int tempIndex = 0;
-                    while (bytes[currentIndex] != 0x24) { // 0x24 == $
-                        // System.out.println(String.valueOf(currentIndex) + ":
-                        // "
-                        // + bytes[currentIndex]);
-                        fnBytes[tempIndex] = bytes[currentIndex];
-                        currentIndex++;
-                        tempIndex++;
-                    }
-                    currentIndex++; // because $
-                    firstName = new String(fnBytes, "UTF-8").trim();
-                    byte[] mnBytes = new byte[16];
-                    tempIndex = 0;
-                    while (bytes[currentIndex] != 0x24) { // 0x24 == $
-                        mnBytes[tempIndex] = bytes[currentIndex];
-                        currentIndex++;
-                        tempIndex++;
-                    }
-                    currentIndex++;
-                    middleName = new String(mnBytes, "UTF-8").trim();
-                    byte[] lnBytes = new byte[16];
-                    tempIndex = 0;
-                    while (bytes[currentIndex] != 0x24) { // 0x24 == $
-                        lnBytes[tempIndex] = bytes[currentIndex];
-                        currentIndex++;
-                        tempIndex++;
-                    }
-                    currentIndex++;
-                    lastName = new String(lnBytes, "UTF-8").trim();
+                for (int i = 14; i < bytes.length; i += 64) {
+                    pid = ((0xFF & bytes[i]) << 56) | ((0xFF & bytes[i
+                        + 1]) << 48) | ((0xFF & bytes[i + 2]) << 40) | ((0xFF
+                            & bytes[i + 3]) << 32) | ((0xFF & bytes[i
+                                + 4]) << 24) | ((0xFF & bytes[i + 5]) << 16)
+                        | ((0xFF & bytes[i + 6]) << 8) | (0xFF & bytes[i + 7]);
+                    byte[] fnBytes = { bytes[i + 8], bytes[i + 9], bytes[i
+                        + 10], bytes[i + 11], bytes[i + 12], bytes[i + 13],
+                        bytes[i + 14], bytes[i + 15], bytes[i + 16], bytes[i
+                            + 17], bytes[i + 18], bytes[i + 19], bytes[i + 20],
+                        bytes[i + 21], bytes[i + 22] }; // read 15 chars
+                    firstName = new String(fnBytes, "US-ASCII").trim();
+                    byte[] mnBytes = { bytes[i + 24], bytes[i + 25], bytes[i
+                        + 26], bytes[i + 27], bytes[i + 28], bytes[i + 29],
+                        bytes[i + 30], bytes[i + 31], bytes[i + 32], bytes[i
+                            + 33], bytes[i + 34], bytes[i + 35], bytes[i + 36],
+                        bytes[i + 37], bytes[i + 38] };
+                    middleName = new String(mnBytes, "US-ASCII").trim();
+                    byte[] lnBytes = { bytes[i + 40], bytes[i + 41], bytes[i
+                        + 42], bytes[i + 43], bytes[i + 44], bytes[i + 45],
+                        bytes[i + 46], bytes[i + 47], bytes[i + 48], bytes[i
+                            + 49], bytes[i + 50], bytes[i + 51], bytes[i + 52],
+                        bytes[i + 53], bytes[i + 54] };
+                    lastName = new String(lnBytes, "US-ASCII").trim();
                     studs.add(new DetailedStudent((int)pid, firstName,
                         middleName, lastName));
-                    currentIndex += 8; // because GOHOKIES
                 }
             }
             catch (IOException e) {
@@ -143,9 +124,7 @@ public class SaveAndLoad {
                 return null;
             }
         }
-        else
-
-        {
+        else {
             System.out.println("Unable to read file to load student data");
             return null;
         }
@@ -283,7 +262,7 @@ public class SaveAndLoad {
         String vtStudents = "VTSTUDENTS";
         byte[] buffer1 = new byte[10];
         try {
-            buffer1 = vtStudents.getBytes("UTF-8");
+            buffer1 = vtStudents.getBytes("US-ASCII");
             for (int i = 0; i < buffer1.length; i++) {
                 toFile[i] = buffer1[i];
             }
@@ -294,7 +273,7 @@ public class SaveAndLoad {
         String goHokies = "GOHOKIES";
         byte[] buffer2 = new byte[8];
         try {
-            buffer2 = goHokies.getBytes("UTF-8");
+            buffer2 = goHokies.getBytes("US-ASCII");
         }
         catch (UnsupportedEncodingException e) {
             System.out.println("Unsupported Encoding in saveStudentData 2");
@@ -302,7 +281,7 @@ public class SaveAndLoad {
         String dollarSign = "$";
         byte[] money = new byte[1];
         try {
-            money = dollarSign.getBytes("UTF-8");
+            money = dollarSign.getBytes("US-ASCII");
         }
         catch (UnsupportedEncodingException e) {
             System.out.println("Unsupported Encoding in saveStudentData 3");
@@ -317,65 +296,63 @@ public class SaveAndLoad {
         byte[] mName = new byte[maxNameLength];
         byte[] lName = new byte[maxNameLength];
         DetailedStudent currentStudent = null;
-        int currentIndex = buffer1.length + indexLength.length;
         for (int i = 0; i < size; i++) {
             currentStudent = students.remove(0);
-            pid = ByteBuffer.allocate(Long.BYTES).putLong(Long.parseLong(
-                currentStudent.getPID())).array();
+            pid = ByteBuffer.allocate(Long.BYTES).putLong((long)currentStudent
+                .getPID()).array();
             for (int j = 0; j < pid.length; j++) {
-                toFile[currentIndex] = pid[j];
-                currentIndex++;
+                toFile[j + (64 * i) + buffer1.length + indexLength.length] =
+                    pid[j];
             }
             try {
-                fName = currentStudent.getName().getFirst().getBytes("UTF-8");
+                fName = currentStudent.getFirstName().getBytes("US-ASCII");
             }
             catch (UnsupportedEncodingException e) {
                 System.out.println("Unsupported Encoding in saveStudentData 4 "
                     + i);
             }
             for (int j = 0; j < fName.length; j++) {
-                toFile[currentIndex] = fName[j];
-                currentIndex++;
+                toFile[j + (64 * i) + maxPIDLength + buffer1.length
+                    + indexLength.length] = fName[j];
             }
-            toFile[currentIndex] = money[0];
-            currentIndex++;
+            toFile[maxNameLength + maxPIDLength + buffer1.length
+                + indexLength.length] = money[0];
             try {
-                mName = currentStudent.getMiddleName().getBytes("UTF-8");
+                mName = currentStudent.getMiddleName().getBytes("US-ASCII");
             }
             catch (UnsupportedEncodingException e) {
                 System.out.println("Unsupported Encoding in saveStudentData 5 "
                     + i);
             }
             for (int j = 0; j < mName.length; j++) {
-                toFile[currentIndex] = mName[j];
-                currentIndex++;
+                toFile[money.length + j + (64 * i) + maxNameLength
+                    + maxPIDLength + buffer1.length + indexLength.length] =
+                        mName[j];
             }
-            toFile[currentIndex] = money[0];
-            currentIndex++;
+            toFile[money.length + 2 * maxNameLength + maxPIDLength
+                + buffer1.length + indexLength.length] = money[0];
             try {
-                lName = currentStudent.getName().getLast().getBytes("UTF-8");
+                lName = currentStudent.getLastName().getBytes("US-ASCII");
             }
             catch (UnsupportedEncodingException e) {
                 System.out.println("Unsupported Encoding in saveStudentData 6 "
                     + i);
             }
             for (int j = 0; j < lName.length; j++) {
-                toFile[currentIndex] = lName[j];
-                currentIndex++;
+                toFile[2 * money.length + j + (64 * i) + 2 * maxNameLength
+                    + maxPIDLength + buffer1.length + indexLength.length] =
+                        lName[j];
             }
-            toFile[currentIndex] = money[0];
-            currentIndex++;
+            toFile[2 * money.length + 3 * maxNameLength + maxPIDLength
+                + buffer1.length + indexLength.length] = money[0];
             for (int j = 0; j < buffer2.length; j++) {
-                toFile[currentIndex] = buffer2[j];
-                currentIndex++;
+                toFile[3 * money.length + j + (64 * i) + 3 * maxNameLength
+                    + maxPIDLength + buffer1.length + indexLength.length] =
+                        buffer2[j];
             }
-        }
-        byte[] finalFile = new byte[currentIndex];
-        for (int i = 0; i < currentIndex; i++) {
-            finalFile[i] = toFile[i];
         }
         try {
-            Files.write(Paths.get(filename), finalFile);
+            Files.write(Paths.get(filename), toFile);
         }
         catch (IOException e) {
             System.out.println("Error writing to file to save student data");
