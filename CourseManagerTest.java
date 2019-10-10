@@ -6,13 +6,18 @@
  * @author Taimoor Qamar
  *
  */
-public class CourseManagerTest {
+public class CourseManagerTest extends student.TestCase {
 
     /**
      * 
      */
     public CourseManagerTest() {
-        // TODO Auto-generated constructor stub
+
+    }
+
+
+    public void setUp() {
+
     }
 
 }

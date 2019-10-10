@@ -1,73 +1,58 @@
+
 /**
- * The student class holds all data on a student's record.
+ * // Virginia Tech Honor Code Pledge:
+ * //
+ * // As a Hokie, I will conduct myself with honor and integrity at all times.
+ * // I will not lie, cheat, or steal, nor will I accept the actions of those
+ * // who do.
+ * //
  * 
+ */
+/**
+ * This is the student class, designed to hold student information and return it
+ * upon invocation.
+ * 
+ * @author Taimoor Qamar
  * @author Peter Dolan
- * @version 9/15/19
+ * @version 2019.09.02
  *
  */
 public class Student {
-    private final int defaultScore = 0;
-    private final Grade defaultGrade = Grade.F;
-    private String firstname;
-    private String lastname;
+    // FIELDS
+    private Name name;
     private int score;
-    private int personalIdentificationNumber;
-    private Grade grade;
+    private String pid;
+    private String grade;
 
 
     /**
-     * Makes a new student
+     * Constructor method for the student class.
      * 
-     * @param firstName
-     *            the student's first name
-     * @param lastName
-     *            the stduent's last name
-     * @param id
-     *            the unique identifier for the student
+     * @param first
+     *            The first name of the student.
+     * @param last
+     *            The last name of the student.
      */
-    public Student(String firstName, String lastName, int id) {
-        firstname = Name.format(firstName);
-        lastname = Name.format(lastName);
-        personalIdentificationNumber = id;
-        score = defaultScore;
-        grade = defaultGrade;
+    public Student(String pid, String first, String last) {
+        this.pid = pid;
+        name = new Name(first, last);
+        score = 0;
+        grade = "F";
     }
 
 
     /**
-     * Returns the student's first name
-     * 
-     * @return first name
+     * Getter method for the Name field.
      */
-    public String getFirstName() {
-        return firstname;
+    public Name getName() {
+        return name;
     }
 
 
     /**
-     * Returns the student's last name
+     * Getter method for the score.
      * 
-     * @return last name
-     */
-    public String getLastName() {
-        return lastname;
-    }
-
-
-    /**
-     * Returns the student's personal identification number
-     * 
-     * @return pid
-     */
-    public int getPID() {
-        return personalIdentificationNumber;
-    }
-
-
-    /**
-     * Returns the student's score
-     * 
-     * @return score
+     * @return field variable score.
      */
     public int getScore() {
         return score;
@@ -75,81 +60,95 @@ public class Student {
 
 
     /**
-     * Returns the student's grade
+     * Setter method for the score.
      * 
-     * @return grade
+     * @param score
+     *            field variable score
      */
-    public Grade getGrade() {
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+
+    /**
+     * Setter method for the score.
+     * 
+     * @param score
+     *            field variable score
+     */
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+
+    /**
+     * Getter method for the pid field variable.
+     * 
+     * @return the studentID field variable.
+     */
+    public String getPID() {
+        return pid;
+    }
+
+
+    /**
+     * Getter method for the grade field variable.
+     * 
+     * @return the grade field variable.
+     */
+    public String getGrade() {
         return grade;
     }
 
 
     /**
-     * Sets the student's score
+     * Returns a String representation of this student with all the relevant
+     * student data.
      * 
-     * @param numericalScore
-     *            the value to which to set the score
-     */
-    public void setScore(int numericalScore) {
-        score = numericalScore;
-    }
-
-
-    /**
-     * Sets the student's grade
-     * 
-     * @param g
-     *            the value to which to set the grade
-     */
-    public void setGrade(String g) {
-        grade = Grade.stringToGrade(g);
-    }
-
-
-    /**
-     * Sets the student's score
-     * 
-     * @param g
-     *            the score associated with the desired grade
-     */
-    public void setGrade(int g) {
-        grade = Grade.intToGrade(g);
-    }
-
-
-    /**
-     * Returns a string representation of the student's record.
-     * id, firstname lastname, score = score
-     * 
-     * @return a string representation of the student's record
+     * @return String A String of the student data.
      */
     @Override
-    public String toString() { // might have to adjust this
-        return "0" + String.valueOf(personalIdentificationNumber) + ", "
-            + firstname + " " + lastname + ", score = " + String.valueOf(score);
+    public String toString() {
+        String ret = null;
+        ret = pid + ", " + name.getFirst() + " " + name.getLast() + ", "
+            + "score = " + score + "\n";
+        return ret;
     }
 
 
-    /**
-     * Checks if other is a Student with the exact same first name, last name,
-     * section id, and score.
-     * 
-     * @param other
-     *            the Object with which this is compared
-     * @return true if yes and false if no
-     */
     @Override
-    public boolean equals(Object other) {
-        if (other == null) {
+    public boolean equals(Object object) {
+
+        // CASE 1
+        if (object == null) {
             return false;
         }
-        if (this == other) {
+        // CASE 2
+        else if (this == object) {
             return true;
         }
-        if (this.getClass() == other.getClass()) {
-            Student s = (Student)other;
-            return this.toString().equals(s.toString());
+        // CASE 3
+        else if (this.getClass() == object.getClass()) {
+            Student other = (Student)object;
+
+            if (this.getScore() != other.getScore()) {
+                return false;
+            }
+
+            else if (this.pid != other.getPID()) {
+                return false;
+            }
+
+            else if (this.name.compareTo(other.getName()) != 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+
         }
+
         return false;
     }
+
 }

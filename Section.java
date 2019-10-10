@@ -27,6 +27,7 @@ public class Section {
     private int index; // The index (or latest entry) for the dataArray
     private boolean scoreFlag; // Flag for score method
     private int scoreReference; // Reference to data for the score method
+    private SectionState state;
 
 
     // ----------------------------------------------------------
@@ -44,7 +45,7 @@ public class Section {
         this.sectionNumber = sectionNumber;
         index = 0;
         scoreFlag = false;
-
+        state = SectionState.Clear;
     }
 
 
@@ -58,6 +59,11 @@ public class Section {
         if (pidTree.find(pid) != null) {
             scoreFlag = false;
             return;
+        }
+        Student studManager = StudentManager.find(pid);
+        if (studManager == null || !studManager.getName().equals(new Name(first,
+            last))) { // if not a valid student
+            scoreFlag = false;
         }
         Student temp = new Student(pid, first, last);
         pidTree.insert(pid, index);
@@ -324,6 +330,28 @@ public class Section {
         else {
             return false;
         }
+    }
+
+
+    /**
+     * Returns the current state of this Section
+     * 
+     * @return the current state
+     */
+    public SectionState getState() {
+        return state;
+    }
+
+
+    /**
+     * Changes the current state of this Section to newState
+     * 
+     * @param newState
+     *            the state to which this Section will change
+     */
+    public void setState(SectionState newState) {
+        state = newState; // seems like bad design because client can make state
+                          // invalid but cbf
     }
 
 }

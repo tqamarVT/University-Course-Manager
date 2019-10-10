@@ -6,7 +6,7 @@
  * @version 9/28/19
  *
  */
-public class DetailedStudent extends Student {
+public class DetailedStudent extends Student implements Comparable<Student> {
     private String middlename;
 
 
@@ -27,7 +27,7 @@ public class DetailedStudent extends Student {
         String firstName,
         String middleName,
         String lastName) {
-        super(firstName, lastName, id);
+        super(String.valueOf(id), firstName, lastName);
         middlename = Name.format(middleName);
     }
 
@@ -71,12 +71,30 @@ public class DetailedStudent extends Student {
         }
         if (this.getClass() == other.getClass()) {
             DetailedStudent ds = (DetailedStudent)other;
-            return this.getPID() == ds.getPID() && this.getFirstName().equals(ds
-                .getFirstName()) && this.getMiddleName().equals(ds
-                    .getMiddleName()) && this.getLastName().equals(ds
-                        .getLastName());
+            return this.getPID().equals(ds.getPID()) && this.getName()
+                .compareTo(ds.getName()) == 0 && this.getMiddleName().equals(ds
+                    .getMiddleName());
         }
         return false;
+    }
+
+
+    /**
+     * Compares this with other based on PID. If this has a larger PID, returns
+     * a positive number. If this has a smaller PID, returns a negative number.
+     * If the PIDs are equal, returns 0.
+     * 
+     * @return If this has a larger PID, returns
+     *         a positive number. If this has a smaller PID, returns a negative
+     *         number.
+     *         If the PIDs are equal, returns 0. If other is null, returns 0.
+     */
+    public int compareTo(Student other) {
+        if (other == null) {
+            return 0; // cbf
+        }
+        return Integer.parseInt(this.getPID()) - Integer.parseInt(other
+            .getPID());
     }
 
 }
