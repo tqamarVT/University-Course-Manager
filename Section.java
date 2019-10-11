@@ -354,4 +354,14 @@ public class Section {
                           // invalid but cbf
     }
 
+
+    /**
+     * Get the number of student records in this Section
+     * 
+     * @return the size
+     */
+    public int getSize() {
+        return pidTree.getSize();
+    }
+
 }

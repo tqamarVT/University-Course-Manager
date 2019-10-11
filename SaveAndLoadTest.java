@@ -27,7 +27,8 @@ public class SaveAndLoadTest extends TestCase {
     private SaveAndLoad twoLineBinS;
     private SaveAndLoad complicatedBinS;
 
-    private SaveAndLoad basicC;
+    private SaveAndLoad taCSVcourse;
+    private SaveAndLoad taCSV2course;
     private SaveAndLoad twoLineC;
     private SaveAndLoad complicatedC;
 
@@ -36,8 +37,8 @@ public class SaveAndLoadTest extends TestCase {
      * Assigns filenames and tests loading .csv files
      */
     public void setUp() {
-        // outContent = new ByteArrayOutputStream();
-        // System.setOut(new PrintStream(outContent));
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
         basicS = new SaveAndLoad("BasicStudentData.csv");
         twoLineS = new SaveAndLoad("TwoLineStudentData.csv");
         complicatedS = new SaveAndLoad("ComplicatedStudentData.csv");
@@ -48,6 +49,9 @@ public class SaveAndLoadTest extends TestCase {
         basicBinS = new SaveAndLoad("BasicStudentData.data");
         twoLineBinS = new SaveAndLoad("TwoLineStudentData.data");
         complicatedBinS = new SaveAndLoad("ComplicatedStudentData.data");
+
+        taCSVcourse = new SaveAndLoad("CS3114.csv");
+        taCSV2course = new SaveAndLoad("cs3114_2.csv");
 
     }
 
@@ -204,63 +208,64 @@ public class SaveAndLoadTest extends TestCase {
      * Tests reading TA's .csv and .data files
      */
     public void testTAStudent() {
-        assertTrue(Arrays.equals(standardS.loadStudentData(), taBinaryFileS
-            .loadStudentData()));
+        DetailedStudent[] rawcsv = standardS.loadStudentData();
+        DetailedStudent[] removeFirst = new DetailedStudent[rawcsv.length - 1];
+        for (int i = 0; i < removeFirst.length; i++) {
+            removeFirst[i] = rawcsv[i + 1]; // copy all but first element
+                                            // (because first element is the
+                                            // only difference)
+        }
+        assertTrue(Arrays.equals(removeFirst, taBinaryFileS.loadStudentData()));
     }
 
 
     /**
-     * tests loadCourseData with premade .csv files
+     * tests loadCourseData with TA's .csv files
      */
     public void testLoadCourseData() {
-        // System.out.println(new File(".").getAbsolutePath());
-        // basic testing:
-        DetailedStudent[] basicSArray = { new DetailedStudent(123456789,
-            "Peter", "Gorman", "Dolan") };
-        assertTrue(Arrays.equals(basicS.loadStudentData(), basicSArray));
-        DetailedStudent[] twoLineSArray = { new DetailedStudent(123456789,
-            "Peter", "Gorman", "Dolan"), new DetailedStudent(987654321, "Peter",
-                "Sweeney", "Dolan") };
-        /**
-         * DetailedStudent[] testTwoLine = twoLineS.loadStudentData().toArray(
-         * twoLineSArray);
-         * for (DetailedStudent d : testTwoLine) {
-         * System.out.println(d.getPID() + " " + d.getFirstName() + " " + d
-         * .getMiddleName() + " " + d.getLastName());
-         * }
-         */
-        assertTrue(Arrays.equals(twoLineS.loadStudentData(), twoLineSArray));
-        // more complicated testing:
-        DetailedStudent[] complicatedSArray = { new DetailedStudent(123456789,
-            "Peter", "Gorman", "Dolan"), new DetailedStudent(987654321, "Peter",
-                "Sweeney", "Dolan"), new DetailedStudent(135798642, "Peter", "",
-                    "Dolan"), new DetailedStudent(111111111, "Peter", "",
-                        "Dolan"), new DetailedStudent(222222222,
-                            "Fifteenlettersf", "Fun", "Maximumchracter") };
+        BST<String, CourseStudent> one = new BST<>();
+        one.insert("394691224", new CourseStudent(3, 394691224, "Aubrey",
+            "Williamson", 100, "A"));
+        one.insert("67964700", new CourseStudent(2, 67964700, "Fritz", "Hudson",
+            78, "B"));
+        one.insert("20380028", new CourseStudent(1, 20380028, "Sage", "Forbes",
+            4, "F"));
+        one.insert("256593948", new CourseStudent(2, 256593948, "Sandra",
+            "Duncan", 26, "F"));
+        one.inOrderTraversal();
+        String test1 = outContent.toString();
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+        taCSV2course.loadCourseData().inOrderTraversal();
+        assertEquals(outContent.toString(), test1);
 
-        /**
-         * DetailedStudent[] testComplicated = complicatedS.loadStudentData();
-         * System.out.println(testComplicated.getClass());
-         * System.out.println(testComplicated.length);
-         * for (int a = 0; a < testComplicated.length; a++) {
-         * System.out.println(testComplicated[a].getPID() + " "
-         * + testComplicated[a].getFirstName() + " " + testComplicated[a]
-         * .getMiddleName() + " " + testComplicated[a].getLastName());
-         * }
-         * System.out.println(complicatedSArray.getClass());
-         * System.out.println(complicatedSArray.length);
-         * for (int a = 0; a < complicatedSArray.length; a++) {
-         * System.out.println(complicatedSArray[a].getPID() + " "
-         * + complicatedSArray[a].getFirstName() + " "
-         * + complicatedSArray[a].getMiddleName() + " "
-         * + complicatedSArray[a].getLastName());
-         * }
-         * for (int a = 0; a < testComplicated.length; a++) {
-         * System.out.println(testComplicated[a].equals(complicatedSArray[a]));
-         * }
-         */
-        assertTrue(Arrays.equals(complicatedS.loadStudentData(),
-            complicatedSArray));
+        BST<String, CourseStudent> two = new BST<>();
+        two.insert("394691224", new CourseStudent(1, 394691224, "Aubrey",
+            "Williamson", 100, "A"));
+        two.insert("67964700", new CourseStudent(2, 67964700, "Fritz", "Hudson",
+            78, "B"));
+        two.insert("248476061", new CourseStudent(2, 248476061, "Winter",
+            "Hodge", 31, "F"));
+        two.insert("291935757", new CourseStudent(2, 291935757, "Brynne",
+            "Myers", 4, "F"));
+        two.insert("792704751", new CourseStudent(2, 792704751, "Leroy",
+            "Sherman", 65, "C+"));
+        two.insert("20380028", new CourseStudent(1, 20380028, "Sage", "Forbes",
+            4, "F"));
+        two.insert("256593948", new CourseStudent(2, 256593948, "Sandra",
+            "Duncan", 26, "F"));
+        two.insert("317397180", new CourseStudent(2, 317397180, "Nigel",
+            "Gonzales", 37, "F"));
+        two.insert("977159896", new CourseStudent(1, 977159896, "Naomi", "Cote",
+            97, "A"));
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+        two.inOrderTraversal();
+        String test2 = outContent.toString();
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+        taCSVcourse.loadCourseData().inOrderTraversal();
+        assertEquals(outContent.toString(), test2);
     }
 
 }

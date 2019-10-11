@@ -150,6 +150,16 @@ public class BST<K extends Comparable<K>, V extends Comparable<V>> {
 
 
     /**
+     * Gets the number of elements in this BST
+     * 
+     * @return the size
+     */
+    public int getSize() {
+        return size;
+    }
+
+
+    /**
      * This method creates and returns an iterator object.
      *
      * @return new Iterator object

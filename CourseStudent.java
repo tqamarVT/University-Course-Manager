@@ -5,7 +5,8 @@
  * @version 9/29/19
  *
  */
-public class CourseStudent extends Student {
+public class CourseStudent extends Student
+    implements Comparable<CourseStudent> {
     private int sectionId;
 
 
@@ -51,8 +52,7 @@ public class CourseStudent extends Student {
      * @param grade
      *            A through F including +, - but not A+, F+, or F-
      */
-    public CourseStudent( // still unclear if grade can be inconsistent with
-                          // score (prob can)
+    public CourseStudent(
         int secID,
         int stuID,
         String firstName,
@@ -132,6 +132,19 @@ public class CourseStudent extends Student {
      */
     public void setSectionID(int secID) {
         sectionId = secID;
+    }
+
+
+    /**
+     * Compares their PIDs
+     * 
+     * @param other
+     *            the CourseStudent to which to compare
+     * @return positive if this comes after other, negative if this comes before
+     *         other, and 0 if they are equal.
+     */
+    public int compareTo(CourseStudent other) {
+        return this.getPID().compareTo(other.getPID());
     }
 
 }
