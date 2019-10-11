@@ -364,4 +364,18 @@ public class Section {
         return pidTree.getSize();
     }
 
+
+    /**
+     * Makes a deep copy of this Section's Student Index
+     * 
+     * @return an array of all students in this section
+     */
+    public Student[] toArray() {
+        Student[] result = new Student[pidTree.getSize()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = dataArray.getAt(i);
+        }
+        return result;
+    }
+
 }
