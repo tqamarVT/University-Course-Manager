@@ -19,6 +19,8 @@ public class SaveAndLoad {
     private String filename;
     private final int maxNameLength = 15;
     private final int maxPIDLength = 8; // in bytes
+    private final int scoreLength = 4; // in bytes
+    private final int gradeLength = 2; // in bytes
 
 
     /**
@@ -205,10 +207,14 @@ public class SaveAndLoad {
                 + "Information file first.");
             return null;
         }
+        String coursename = null;
         BST<String, CourseStudent> studs = new BST<>();
         if (filename.contains(".csv")) { // can file names contain .s? (i.e.
                                          // fd.csv.data) (I am guessing no)
             Scanner fileScanner = null;
+            coursename = filename.substring(0, filename.length() - 4);
+            System.out.println(coursename
+                + " Course has been successfully loaded.");
             try {
                 fileScanner = new Scanner(new File(filename));
             }
@@ -221,6 +227,9 @@ public class SaveAndLoad {
             fileScanner.close();
         }
         else if (filename.contains(".data")) {
+            coursename = filename.substring(0, filename.length() - 5);
+            System.out.println(coursename
+                + " Course has been successfully loaded.");
             try {
                 byte[] bytes = Files.readAllBytes(Paths.get(filename));
                 int numSections = ((0xFF & bytes[10]) << 24) | ((0xFF
@@ -306,6 +315,8 @@ public class SaveAndLoad {
                             studs.remove(String.valueOf(pid), studs.find(String
                                 .valueOf(pid)));
                         }
+                        // need to check CourseManager? Data will be inserted
+                        // later, so maybe not
                         // score and grade will always be in .data file
                         studs.insert(String.valueOf(pid), new CourseStudent(i,
                             (int)pid, firstName, lastName, score, grade));
@@ -353,30 +364,32 @@ public class SaveAndLoad {
         if (lineScanner.hasNext()) {
             sectionID = lineScanner.nextInt();
             pid = Integer.parseInt(lineScanner.next());
+            String fPID = Student.formatPID(String.valueOf(pid));
             firstName = lineScanner.next();
             lastName = lineScanner.next();
             score = lineScanner.next();
             grade = lineScanner.next();
             grade = Name.format(grade);
-            if (StudentManager.find(String.valueOf(pid)) == null) {
+            if (StudentManager.find(fPID) == null) {
                 System.out.println("Warning: Student " + firstName + " "
                     + lastName + " is not loaded to section " + sectionID
                     + " since he/she doesn't exist in the loaded student records.");
                 lineScanner.close();
                 return result;
             }
-            Student studFound = StudentManager.find(String.valueOf(pid));
-            if (studFound != new Student(String.valueOf(pid), firstName,
-                lastName)) {
+            Student studFound = StudentManager.find(fPID);
+            DetailedStudent castedFound = (DetailedStudent)(studFound);
+            if (!studFound.equals((Student)new DetailedStudent(pid, firstName,
+                castedFound.getMiddleName(), lastName))) {
                 System.out.println("Warning: Student " + firstName + " "
                     + lastName + " is not loaded to section " + sectionID
                     + " since the corresponding pid belongs to another student.");
                 lineScanner.close();
                 return result;
             }
-            if (studs.find(String.valueOf(pid)) != null) {
+            if (studs.find(fPID) != null) {
                 // need to verify, then consider different section
-                CourseStudent found = studs.find(String.valueOf(pid));
+                CourseStudent found = studs.find(fPID);
                 if (found.getSectionID() != sectionID) {
                     System.out.println("Warning: Student " + firstName + " "
                         + lastName + " is not loaded to section " + sectionID
@@ -385,24 +398,23 @@ public class SaveAndLoad {
                     lineScanner.close();
                     return result;
                 }
-                studs.remove(String.valueOf(pid), studs.find(String.valueOf(
-                    pid)));
+                studs.remove(fPID, studs.find(fPID));
             }
 
             if (grade.length() == 0 && score.length() == 0) {
-                studs.insert(String.valueOf(pid), new CourseStudent(sectionID,
+                studs.insert(fPID, new CourseStudent(sectionID,
                     pid, firstName, lastName));
             }
             else if (score.length() == 0) {
-                studs.insert(String.valueOf(pid), new CourseStudent(sectionID,
+                studs.insert(fPID, new CourseStudent(sectionID,
                     pid, firstName, lastName, grade));
             }
             else if (grade.length() == 0) {
-                studs.insert(String.valueOf(pid), new CourseStudent(sectionID,
+                studs.insert(fPID, new CourseStudent(sectionID,
                     pid, firstName, lastName, Integer.parseInt(score)));
             }
             else {
-                studs.insert(String.valueOf(pid), new CourseStudent(sectionID,
+                studs.insert(fPID, new CourseStudent(sectionID,
                     pid, firstName, lastName, Integer.parseInt(score), grade));
             }
 
@@ -581,59 +593,80 @@ public class SaveAndLoad {
         for (int i = 0; i < indexLength.length; i++) {
             toFile[i + buffer1.length] = indexLength[i];
         }
-        byte[] pid = new byte[maxPIDLength];
-        byte[] fName = new byte[maxNameLength];
-        byte[] mName = new byte[maxNameLength];
+        byte[] sz = new byte[Integer.BYTES]; // 4
+        byte[] pid = new byte[maxPIDLength]; // 8
+        byte[] fName = new byte[maxNameLength]; // 16
         byte[] lName = new byte[maxNameLength];
-        DetailedStudent currentStudent = null;
+        byte[] scre = new byte[Integer.BYTES];
+        byte[] grade = new byte[gradeLength]; // 2
+        Section currentSection = null;
+        Student currentStudent = null;
         int currentIndex = buffer1.length + indexLength.length;
         for (int i = 0; i < size; i++) {
-            currentStudent = students.remove(0);
-            pid = ByteBuffer.allocate(Long.BYTES).putLong(Long.parseLong(
-                currentStudent.getPID())).array();
-            for (int j = 0; j < pid.length; j++) {
-                toFile[currentIndex] = pid[j];
+            currentSection = students.remove(0);
+            Student[] studInSec = currentSection.toArray();
+            int sectionSize = currentSection.getSize();
+            sz = ByteBuffer.allocate(Integer.BYTES).putInt(sectionSize).array();
+            for (int j = 0; j < sz.length; j++) {
+                toFile[currentIndex] = sz[j];
                 currentIndex++;
             }
-            try {
-                fName = currentStudent.getName().getFirst().getBytes("UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
-                System.out.println("Unsupported Encoding in saveStudentData 4 "
-                    + i);
-            }
-            for (int j = 0; j < fName.length; j++) {
-                toFile[currentIndex] = fName[j];
+            for (int z = 0; z < studInSec.length; z++) {
+
+                currentStudent = studInSec[z];
+
+                pid = ByteBuffer.allocate(Long.BYTES).putLong(Long.parseLong(
+                    currentStudent.getPID())).array();
+                for (int j = 0; j < pid.length; j++) {
+                    toFile[currentIndex] = pid[j];
+                    currentIndex++;
+                }
+                try {
+                    fName = currentStudent.getName().getFirst().getBytes(
+                        "UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    System.out.println(
+                        "Unsupported Encoding in saveStudentData 4 " + i);
+                }
+                for (int j = 0; j < fName.length; j++) {
+                    toFile[currentIndex] = fName[j];
+                    currentIndex++;
+                }
+                toFile[currentIndex] = money[0];
                 currentIndex++;
-            }
-            toFile[currentIndex] = money[0];
-            currentIndex++;
-            try {
-                mName = currentStudent.getMiddleName().getBytes("UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
-                System.out.println("Unsupported Encoding in saveStudentData 5 "
-                    + i);
-            }
-            for (int j = 0; j < mName.length; j++) {
-                toFile[currentIndex] = mName[j];
+                try {
+                    lName = currentStudent.getName().getLast().getBytes(
+                        "UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    System.out.println(
+                        "Unsupported Encoding in saveStudentData 6 " + i);
+                }
+                for (int j = 0; j < lName.length; j++) {
+                    toFile[currentIndex] = lName[j];
+                    currentIndex++;
+                }
+                toFile[currentIndex] = money[0];
                 currentIndex++;
+                scre = ByteBuffer.allocate(Integer.BYTES).putInt(currentStudent
+                    .getScore()).array();
+                for (int j = 0; j < scre.length; j++) {
+                    toFile[currentIndex] = scre[j];
+                    currentIndex++;
+                }
+                try {
+                    grade = currentStudent.getGrade().getBytes("UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    System.out.println(
+                        "Unsupported Encoding in saveStudentData 6 " + i);
+                }
+                for (int j = 0; j < grade.length; j++) {
+                    toFile[currentIndex] = grade[j];
+                    currentIndex++;
+                }
             }
-            toFile[currentIndex] = money[0];
-            currentIndex++;
-            try {
-                lName = currentStudent.getName().getLast().getBytes("UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
-                System.out.println("Unsupported Encoding in saveStudentData 6 "
-                    + i);
-            }
-            for (int j = 0; j < lName.length; j++) {
-                toFile[currentIndex] = lName[j];
-                currentIndex++;
-            }
-            toFile[currentIndex] = money[0];
-            currentIndex++;
             for (int j = 0; j < buffer2.length; j++) {
                 toFile[currentIndex] = buffer2[j];
                 currentIndex++;
@@ -645,12 +678,11 @@ public class SaveAndLoad {
         }
         try {
             Files.write(Paths.get(filename), finalFile);
-            System.out.println("Saved all Students data to " + filename);
+            System.out.println("Saved all course data to " + filename);
         }
         catch (IOException e) {
             System.out.println("Error writing to file to save student data");
         }
-        System.out.println("Saved all course data to " + filename);
     }
 
 }

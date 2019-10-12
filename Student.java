@@ -33,8 +33,8 @@ public class Student {
      * @param last
      *            The last name of the student.
      */
-    public Student(String pid, String first, String last) {
-        this.pid = pid;
+    public Student(String PID, String first, String last) {
+        this.pid = Student.formatPID(PID);
         name = new Name(first, last);
         score = 0;
         grade = "F";
@@ -135,7 +135,8 @@ public class Student {
                 return false;
             }
 
-            else if (this.pid != other.getPID()) {
+            else if (Integer.parseInt(this.pid) != Integer.parseInt(
+                other.pid)) {
                 return false;
             }
 
@@ -149,6 +150,54 @@ public class Student {
         }
 
         return false;
+    }
+
+
+    /**
+     * Converts a PID to a nine-digit PID.
+     * 
+     * @param rawPID
+     *            the pid to be formatted (must be less than or equal to 9
+     *            characters
+     * @return a 9-digit String representation of the PID with 0's at the front
+     *         if necessary (or null if rawText has more than 9 characters or is
+     *         null)
+     */
+    public static String formatPID(String rawPID) {
+        if (rawPID == null) {
+            return null;
+        }
+        if (rawPID.length() == 9) {
+            return rawPID;
+        }
+        if (rawPID.length() == 8) {
+            return "0" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 7) {
+            return "00" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 6) {
+            return "000" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 5) {
+            return "0000" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 4) {
+            return "00000" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 3) {
+            return "000000" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 2) {
+            return "0000000" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 1) {
+            return "00000000" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        if (rawPID.length() == 0) {
+            return "00000000" + String.valueOf(Integer.parseInt(rawPID));
+        }
+        return null;
     }
 
 }

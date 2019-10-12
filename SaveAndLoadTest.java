@@ -29,8 +29,8 @@ public class SaveAndLoadTest extends TestCase {
 
     private SaveAndLoad taCSVcourse;
     private SaveAndLoad taCSV2course;
-    private SaveAndLoad twoLineC;
-    private SaveAndLoad complicatedC;
+    private SaveAndLoad taDATAcourse;
+    private SaveAndLoad taDATA2course;
 
 
     /**
@@ -53,6 +53,10 @@ public class SaveAndLoadTest extends TestCase {
         taCSVcourse = new SaveAndLoad("CS3114.csv");
         taCSV2course = new SaveAndLoad("cs3114_2.csv");
 
+        taDATAcourse = new SaveAndLoad("CS3114.data");
+        taDATA2course = new SaveAndLoad("cs3114_2.data");
+
+        StudentManager.clear();
     }
 
 
@@ -223,17 +227,21 @@ public class SaveAndLoadTest extends TestCase {
      * tests loadCourseData with TA's .csv files
      */
     public void testLoadCourseData() {
+        StudentManager.load("students.csv");
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
         BST<String, CourseStudent> one = new BST<>();
         one.insert("394691224", new CourseStudent(3, 394691224, "Aubrey",
             "Williamson", 100, "A"));
-        one.insert("67964700", new CourseStudent(2, 67964700, "Fritz", "Hudson",
+        one.insert("067964700", new CourseStudent(2, 67964700, "Fritz", "Hudson",
             78, "B"));
-        one.insert("20380028", new CourseStudent(1, 20380028, "Sage", "Forbes",
+        one.insert("020380028", new CourseStudent(1, 20380028, "Sage", "Forbes",
             4, "F"));
         one.insert("256593948", new CourseStudent(2, 256593948, "Sandra",
             "Duncan", 26, "F"));
         one.inOrderTraversal();
-        String test1 = outContent.toString();
+        String test1 = "cs3114_2 Course has been successfully loaded.\n"
+            + outContent.toString();
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
         taCSV2course.loadCourseData().inOrderTraversal();
@@ -266,6 +274,96 @@ public class SaveAndLoadTest extends TestCase {
         System.setOut(new PrintStream(outContent));
         taCSVcourse.loadCourseData().inOrderTraversal();
         assertEquals(outContent.toString(), test2);
+
+        BST<String, CourseStudent> three = new BST<>();
+        three.insert("394691224", new CourseStudent(1, 394691224, "Aubrey",
+            "Williamson", 100, "A"));
+        three.insert("67964700", new CourseStudent(2, 67964700, "Fritz",
+            "Hudson", 78, "B"));
+        three.insert("248476061", new CourseStudent(2, 248476061, "Winter",
+            "Hodge", 31, "F"));
+        three.insert("291935757", new CourseStudent(2, 291935757, "Brynne",
+            "Myers", 4, "F"));
+        three.insert("792704751", new CourseStudent(2, 792704751, "Leroy",
+            "Sherman", 65, "C+"));
+        three.insert("20380028", new CourseStudent(1, 20380028, "Sage",
+            "Forbes", 4, "F"));
+        three.insert("256593948", new CourseStudent(2, 256593948, "Sandra",
+            "Duncan", 26, "F"));
+        three.insert("317397180", new CourseStudent(2, 317397180, "Nigel",
+            "Gonzales", 37, "F"));
+        three.insert("977159896", new CourseStudent(1, 977159896, "Naomi",
+            "Cote", 97, "A"));
+    }
+
+
+    /**
+     * calls loadCourseData. if there is no .data file, makes a new one. If
+     * there is one, loads the file and then deletes it
+     */
+    public void testSaveAndLoadCourseData() {
+        if (taDATAcourse.loadStudentData() == null) { // there is no previously
+            // saved file
+            taDATAcourse.saveStudentData(taCSVcourse.loadStudentData());
+            taDATA2course.saveStudentData(taCSV2course.loadStudentData());
+        }
+        else { // same as for testLoadCourseData except from .data file
+// DetailedStudent[] basicSArray = { new DetailedStudent(123456789,
+// "Peter", "Gorman", "Dolan") };
+//
+// DetailedStudent[] twoLineSArray = { new DetailedStudent(123456789,
+// "Peter", "Gorman", "Dolan"), new DetailedStudent(987654321,
+// "Peter", "Sweeney", "Dolan") };
+//
+// DetailedStudent[] complicatedSArray = { new DetailedStudent(
+// 123456789, "Peter", "Gorman", "Dolan"), new DetailedStudent(
+// 987654321, "Peter", "Sweeney", "Dolan"),
+// new DetailedStudent(135798642, "Peter", "", "Dolan"),
+// new DetailedStudent(111111111, "Peter", "", "Dolan"),
+// new DetailedStudent(222222222, "Fifteenlettersf", "Fun",
+// "Maximumchracter") };
+//
+// DetailedStudent[] test1 = basicBinS.loadStudentData();
+// DetailedStudent[] test2 = twoLineBinS.loadStudentData();
+// DetailedStudent[] test3 = complicatedBinS.loadStudentData();
+//
+// new File(basicBinS.getFilename()).delete();
+// new File(twoLineBinS.getFilename()).delete();
+// new File(complicatedBinS.getFilename()).delete();
+// /**
+// * for (int a = 0; a < test1.length; a++) {
+// * System.out.println(test1[a].getPID() + " " + test1[a].getName()
+// * .getFirst() + " " + test1[a].getMiddleName() + " "
+// * + test1[a].getName().getLast());
+// * }
+// * for (int a = 0; a < basicSArray.length; a++) {
+// * System.out.println(basicSArray[a].getPID() + " "
+// * + basicSArray[a].getName().getFirst() + " " + basicSArray[a]
+// * .getMiddleName() + " " + basicSArray[a].getName()
+// * .getLast());
+// * }
+// * for (int a = 0; a < test1.length; a++) {
+// * System.out.println(test1[a].equals(basicSArray[a]));
+// * }
+// * for (int a = 0; a < test2.length; a++) {
+// * System.out.println(test2[a].getPID() + " " + test2[a].getName()
+// * .getFirst() + " " + test2[a].getMiddleName() + " "
+// * + test2[a].getName().getLast());
+// * }
+// * for (int a = 0; a < twoLineSArray.length; a++) {
+// * System.out.println(twoLineSArray[a].getPID() + " "
+// * + twoLineSArray[a].getName().getFirst() + " "
+// * + twoLineSArray[a].getMiddleName() + " " + twoLineSArray[a]
+// * .getName().getLast());
+// * }
+// * for (int a = 0; a < test2.length; a++) {
+// * System.out.println(test2[a].equals(twoLineSArray[a]));
+// * }
+// */
+// assertTrue(Arrays.equals(test1, basicSArray));
+// assertTrue(Arrays.equals(test2, twoLineSArray));
+// assertTrue(Arrays.equals(test3, complicatedSArray));
+        }
     }
 
 }
