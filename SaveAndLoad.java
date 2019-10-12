@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.nio.file.Paths;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.util.Iterator;
 
 /**
  * Handles reading from and writing to .csv and .data files
@@ -281,18 +282,21 @@ public class SaveAndLoad {
                         byte[] gradeBytes = { bytes[currentIndex++],
                             bytes[currentIndex++] };
                         grade = new String(gradeBytes, "UTF-8").trim();
+                        String fPID = Student.formatPID(String.valueOf(pid));
                         // verify student info
-                        if (StudentManager.find(String.valueOf(pid)) == null) {
+                        if (StudentManager.find(fPID) == null) {
                             System.out.println("Warning: Student " + firstName
                                 + " " + lastName + " is not loaded to section "
                                 + i
                                 + " since he/she doesn't exist in the loaded student records.");
                             return studs;
                         }
-                        Student studFound = StudentManager.find(String.valueOf(
-                            pid));
-                        if (studFound != new Student(String.valueOf(pid),
-                            firstName, lastName)) {
+                        Student studFound = StudentManager.find(fPID);
+                        DetailedStudent castedFound =
+                            (DetailedStudent)(studFound);
+                        if (!studFound.equals((Student)new DetailedStudent(
+                            (int)pid, firstName, castedFound.getMiddleName(),
+                            lastName))) {
                             System.out.println("Warning: Student " + firstName
                                 + " " + lastName + " is not loaded to section "
                                 + i
@@ -300,9 +304,9 @@ public class SaveAndLoad {
                             return studs;
                         }
                         // consider other sections
-                        if (studs.find(String.valueOf(pid)) != null) {
-                            CourseStudent found = studs.find(String.valueOf(
-                                pid));
+                        if (studs.find(fPID) != null) {
+                            // need to verify, then consider different section
+                            CourseStudent found = studs.find(fPID);
                             if (found.getSectionID() != i) {
                                 System.out.println("Warning: Student "
                                     + firstName + " " + lastName
@@ -312,14 +316,13 @@ public class SaveAndLoad {
                                     + String.valueOf(found.getSectionID()));
                                 return studs;
                             }
-                            studs.remove(String.valueOf(pid), studs.find(String
-                                .valueOf(pid)));
+                            studs.remove(fPID, studs.find(fPID));
                         }
                         // need to check CourseManager? Data will be inserted
                         // later, so maybe not
                         // score and grade will always be in .data file
-                        studs.insert(String.valueOf(pid), new CourseStudent(i,
-                            (int)pid, firstName, lastName, score, grade));
+                        studs.insert(fPID, new CourseStudent(i, (int)pid,
+                            firstName, lastName, score, grade));
                     }
                     currentIndex += 8; // because GOHOKIES
                 }
@@ -402,20 +405,20 @@ public class SaveAndLoad {
             }
 
             if (grade.length() == 0 && score.length() == 0) {
-                studs.insert(fPID, new CourseStudent(sectionID,
-                    pid, firstName, lastName));
+                studs.insert(fPID, new CourseStudent(sectionID, pid, firstName,
+                    lastName));
             }
             else if (score.length() == 0) {
-                studs.insert(fPID, new CourseStudent(sectionID,
-                    pid, firstName, lastName, grade));
+                studs.insert(fPID, new CourseStudent(sectionID, pid, firstName,
+                    lastName, grade));
             }
             else if (grade.length() == 0) {
-                studs.insert(fPID, new CourseStudent(sectionID,
-                    pid, firstName, lastName, Integer.parseInt(score)));
+                studs.insert(fPID, new CourseStudent(sectionID, pid, firstName,
+                    lastName, Integer.parseInt(score)));
             }
             else {
-                studs.insert(fPID, new CourseStudent(sectionID,
-                    pid, firstName, lastName, Integer.parseInt(score), grade));
+                studs.insert(fPID, new CourseStudent(sectionID, pid, firstName,
+                    lastName, Integer.parseInt(score), grade));
             }
 
         }
@@ -551,11 +554,12 @@ public class SaveAndLoad {
      * 
      * @param sections
      *            the array containing all of the sections to write to the
-     *            file
+     *            file (except the first section (secitons[0]) will not be
+     *            written to the file)
      */
     public void saveCourseData(Section[] sections) {
         ArrayList<Section> students = new ArrayList<Section>(initialCapacity);
-        for (int i = 0; i < sections.length; i++) {
+        for (int i = 1; i < sections.length; i++) {
             students.add(sections[i]);
         }
         Integer size = students.size();
@@ -683,6 +687,31 @@ public class SaveAndLoad {
         catch (IOException e) {
             System.out.println("Error writing to file to save student data");
         }
+    }
+
+
+    /**
+     * Writes the information contained in the bst of CourseStudents to a
+     * binary (.data) file
+     * 
+     * @param bst
+     *            the bst containing all of the CourseStudents to write to the
+     *            file
+     */
+    public void saveCourseData(BST<String, CourseStudent> bst) {
+        // unsure how big to make a section (make huge)
+        Section[] result = new Section[22];
+        for (int i = 1; i < result.length; i++) {
+            result[i] = new Section(i);
+        }
+        Iterator<CourseStudent> iterator = bst.iterator();
+        while (iterator.hasNext()) {
+            CourseStudent next = iterator.next();
+            int secID = next.getSectionID();
+            result[secID].insert(next.getPID(), next.getName().getFirst(), next
+                .getName().getLast());
+        }
+        saveCourseData(result);
     }
 
 }
