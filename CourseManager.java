@@ -50,7 +50,7 @@ public class CourseManager {
      * @param fileName
      */
     public void loadcoursedata(String fileName) {
-        SaveAndLoad saveAndLoad = new SaveAndLoad(fileName);
+        saveAndLoad = new SaveAndLoad(fileName);
         courseStudentBST = saveAndLoad.loadCourseData();
         if (courseStudentBST == null) {
             return;

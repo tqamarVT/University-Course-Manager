@@ -311,7 +311,7 @@ public class SaveAndLoad {
                                 System.out.println("Warning: Student "
                                     + firstName + " " + lastName
                                     + " is not loaded to section " + i
-                                    + "since "
+                                    + " since "
                                     + "he/she is already enrolled in section "
                                     + String.valueOf(found.getSectionID()));
                                 return studs;
@@ -660,7 +660,7 @@ public class SaveAndLoad {
                     currentIndex++;
                 }
                 try {
-                    grade = currentStudent.getGrade().getBytes("UTF-8");
+                    grade[0] = currentStudent.getGrade().getBytes("UTF-8")[0];
                 }
                 catch (UnsupportedEncodingException e) {
                     System.out.println(

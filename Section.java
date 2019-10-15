@@ -532,14 +532,21 @@ public class Section {
 
 
     /**
-     * Makes a deep copy of this Section's Student Index
+     * Makes a deep copy of this Section's Student Index that does not include
+     * null Students
      * 
      * @return an array of all students in this section
      */
     public Student[] toArray() {
         Student[] result = new Student[pidTree.getSize()];
+        int count = 0;
+
         for (int i = 0; i < result.length; i++) {
-            result[i] = dataArray.getAt(i);
+            while(dataArray.getAt(count) == null) {
+                count++;
+            }
+            result[i] = dataArray.getAt(count);
+            count++;
         }
         return result;
     }

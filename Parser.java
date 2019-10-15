@@ -101,6 +101,7 @@ public class Parser {
                 case "merge":
                     courseManager.merge();
                     break;
+                case "savestudentsdata":
                 case "savestudentdata":
                     savestudentdata(lineScanner);
                     break;
