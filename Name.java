@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -26,8 +27,8 @@ public class Name implements Comparable<Name> {
      *            Last name
      */
     public Name(String first, String last) {
-        this.first = first;
-        this.last = last;
+        this.first = Name.format(first);
+        this.last = Name.format(last);
     }
 
 
@@ -48,6 +49,27 @@ public class Name implements Comparable<Name> {
      */
     public String getLast() {
         return this.last;
+    }
+
+
+    /**
+     * Returns a formatted version of rawText that can be used to compare
+     * Strings while ignoring case.
+     * 
+     * @param rawText
+     *            the text to be formatted
+     * @return returns rawText except that the first letter is capitalized, and
+     *         the rest of rawText is lower case. If rawText is null or empty,
+     *         return "".
+     */
+    public static String format(String rawText) {
+        if (rawText == null || rawText.length() < 1) {
+            return "";
+        }
+        String lower = rawText.toLowerCase();
+        String capitalizeFirstLetter = lower.substring(0, 1).toUpperCase();
+        return capitalizeFirstLetter + lower.substring(1);
+
     }
 
 

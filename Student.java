@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * // Virginia Tech Honor Code Pledge:
  * //
@@ -12,6 +14,7 @@
  * upon invocation.
  * 
  * @author Taimoor Qamar
+ * @author Peter Dolan
  * @version 2019.09.02
  *
  */
@@ -31,8 +34,8 @@ public class Student {
      * @param last
      *            The last name of the student.
      */
-    public Student(String pid, String first, String last) {
-        this.pid = pid;
+    public Student(String PID, String first, String last) {
+        this.pid = Student.formatPID(PID);
         name = new Name(first, last);
         score = 0;
         grade = "F";
@@ -76,6 +79,7 @@ public class Student {
      */
     public void setGrade(String grade) {
         this.grade = grade;
+
     }
 
 
@@ -86,6 +90,16 @@ public class Student {
      */
     public String getPID() {
         return pid;
+    }
+
+
+    /**
+     * Getter method for the grade field variable.
+     * 
+     * @return the grade field variable.
+     */
+    public String getGrade() {
+        return grade;
     }
 
 
@@ -123,7 +137,8 @@ public class Student {
                 return false;
             }
 
-            else if (this.pid != other.getPID()) {
+            else if (Integer.parseInt(this.pid) != Integer.parseInt(
+                other.pid)) {
                 return false;
             }
 
@@ -137,6 +152,33 @@ public class Student {
         }
 
         return false;
+    }
+
+
+    /**
+     * Converts a PID to a nine-digit PID.
+     * 
+     * @param rawPID
+     *            the pid to be formatted (must be less than or equal to 9
+     *            characters
+     * @return a 9-digit String representation of the PID with 0's at the front
+     *         if necessary (or null if rawText has more than 9 characters or is
+     *         null)
+     */
+    public static String formatPID(String rawPID) {
+        if (rawPID == null) {
+            return null;
+        }
+        int difference = 9 - rawPID.length();
+        if (difference == 0) {
+            return rawPID;
+        }
+        else {
+            char[] zerosArr = new char[difference];
+            Arrays.fill(zerosArr, '0');
+            String zeros = new String(zerosArr);
+            return zeros + rawPID;
+        }
     }
 
 }
