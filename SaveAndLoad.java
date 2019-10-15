@@ -396,7 +396,7 @@ public class SaveAndLoad {
                 if (found.getSectionID() != sectionID) {
                     System.out.println("Warning: Student " + firstName + " "
                         + lastName + " is not loaded to section " + sectionID
-                        + "since " + "he/she is already enrolled in section "
+                        + " since " + "he/she is already enrolled in section "
                         + String.valueOf(found.getSectionID()));
                     lineScanner.close();
                     return result;

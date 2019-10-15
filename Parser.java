@@ -21,6 +21,8 @@ import java.util.Scanner;
  */
 public class Parser {
     private static CourseManager courseManager = new CourseManager();
+
+
     /**
      * Reads the file for commands and calls other methods to execute commands.
      * 
@@ -72,6 +74,9 @@ public class Parser {
                     insert(lineScanner); // different
                     break;
                 case "searchid":
+                    searchid(lineScanner);
+                    break;
+                case "search":
                     search(lineScanner);
                     break;
                 case "score":
@@ -211,6 +216,20 @@ public class Parser {
 
     /**
      * Reads arguments from the file using the passed Scanner and calls
+     * CourseManager.searchid() with the arguments from the file.
+     * 
+     * @param lineScanner
+     *            Scanner object at the position in the file after reading the
+     *            command but before reading the arguments
+     */
+    public static void searchid(Scanner lineScanner) {
+        String arg1 = lineScanner.next();
+        courseManager.list(arg1);
+    }
+
+
+    /**
+     * Reads arguments from the file using the passed Scanner and calls
      * CourseManager.score() with the arguments from the file.
      * 
      * @param lineScanner
@@ -250,7 +269,6 @@ public class Parser {
             courseManager.remove(arg1);
         }
     }
-
 
 
     /**

@@ -167,6 +167,9 @@ public class Section {
         System.out.print("search results for " + name + ":\n");
         for (int i = 0; i < index; i++) {
             Student temp = dataArray.getAt(i);
+            if (temp == null) {
+                continue;
+            }
             if (temp.getName().getFirst().compareToIgnoreCase(name) == 0 || temp
                 .getName().getLast().compareToIgnoreCase(name) == 0) {
                 System.out.print(temp.toString());
@@ -542,7 +545,7 @@ public class Section {
         int count = 0;
 
         for (int i = 0; i < result.length; i++) {
-            while(dataArray.getAt(count) == null) {
+            while (dataArray.getAt(count) == null) {
                 count++;
             }
             result[i] = dataArray.getAt(count);
