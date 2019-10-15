@@ -26,7 +26,6 @@ public enum Grades {
 
     private final int score;
     private final String letterGrade;
-    private int count;
 
 
     /**
@@ -40,7 +39,6 @@ public enum Grades {
     private Grades(int score, String letterGrade) {
         this.score = score;
         this.letterGrade = letterGrade;
-        this.count = 0;
     }
 
 
@@ -72,48 +70,12 @@ public enum Grades {
     }
 
 
-    /**
-     * Updates the count of every enumerated variable.
-     * 
-     * @param letterGrade
-     *            letterGrade corresponding to the enumeration variable to
-     *            update.
-     */
-    public static void updateCount(String letterGrade) {
+    public static String[] getGradeArr() {
+        int i = 0;
+        String[] ret = new String[12];
         for (Grades g : values()) {
-            if (letterGrade.equalsIgnoreCase(g.letterGrade)) {
-                g.count++;
-            }
-        }
-    }
-
-
-    /**
-     * 
-     * @return
-     */
-    public String returnSpecificCount(String grade) {
-        String ret = null;
-        for (Grades g : values()) {
-            if (g.letterGrade.equalsIgnoreCase(grade)) {
-                ret = String.valueOf(g.count);
-            }
-            else {
-                continue;
-            }
-        }
-        return ret;
-    }
-
-
-    /**
-     * 
-     * @return
-     */
-    public String returnTotalCount() {
-        String ret = null;
-        for (Grades g : values()) {
-            ret = g.returnGrade() + " " + String.valueOf(g.count) + "\n";
+            ret[i] = g.letterGrade;
+            i++;
         }
         return ret;
     }

@@ -30,6 +30,7 @@
  *
  */
 public class Coursemanager2 {
+    
 
     /**
      * The main program. It reads the command-line arguments and passes the

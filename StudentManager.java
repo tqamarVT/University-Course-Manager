@@ -91,9 +91,9 @@ public class StudentManager {
      * @param filename
      *            where to save this
      */
-    public static void save(String filename) {
+    public static void save(String fileName) {
         if (isInitialized()) {
-            SaveAndLoad save = new SaveAndLoad(filename);
+            SaveAndLoad save = new SaveAndLoad(fileName);
             save.saveStudentData(sortedArray);
         }
         else {
@@ -110,8 +110,8 @@ public class StudentManager {
      * @param filename
      *            file from which to load
      */
-    public static void load(String filename) {
-        SaveAndLoad load = new SaveAndLoad(filename);
+    public static void load(String fileName) {
+        SaveAndLoad load = new SaveAndLoad(fileName);
         sortedArray = load.loadStudentData();
         Arrays.sort(sortedArray);
     }

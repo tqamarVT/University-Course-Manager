@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 /**
  * // Virginia Tech Honor Code Pledge:
@@ -78,6 +79,7 @@ public class Student {
      */
     public void setGrade(String grade) {
         this.grade = grade;
+
     }
 
 
@@ -167,37 +169,16 @@ public class Student {
         if (rawPID == null) {
             return null;
         }
-        if (rawPID.length() == 9) {
+        int difference = 9 - rawPID.length();
+        if (difference == 0) {
             return rawPID;
         }
-        if (rawPID.length() == 8) {
-            return "0" + String.valueOf(Integer.parseInt(rawPID));
+        else {
+            char[] zerosArr = new char[difference];
+            Arrays.fill(zerosArr, '0');
+            String zeros = new String(zerosArr);
+            return zeros + rawPID;
         }
-        if (rawPID.length() == 7) {
-            return "00" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        if (rawPID.length() == 6) {
-            return "000" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        if (rawPID.length() == 5) {
-            return "0000" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        if (rawPID.length() == 4) {
-            return "00000" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        if (rawPID.length() == 3) {
-            return "000000" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        if (rawPID.length() == 2) {
-            return "0000000" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        if (rawPID.length() == 1) {
-            return "00000000" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        if (rawPID.length() == 0) {
-            return "00000000" + String.valueOf(Integer.parseInt(rawPID));
-        }
-        return null;
     }
 
 }

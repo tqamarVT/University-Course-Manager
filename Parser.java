@@ -20,6 +20,7 @@ import java.util.Scanner;
  *
  */
 public class Parser {
+    private static CourseManager courseManager = new CourseManager();
     /**
      * Reads the file for commands and calls other methods to execute commands.
      * 
@@ -80,16 +81,16 @@ public class Parser {
                     remove(lineScanner); // different
                     break;
                 case "clearsection":
-                    removeSection(lineScanner);
+                    courseManager.clearsection();
                     break;
                 case "dumpsection":
-                    CourseManager.dumpSection();
+                    courseManager.dumpsection();
                     break;
                 case "grade":
-                    CourseManager.grade();
+                    courseManager.grade();
                     break;
                 case "stat":
-                    CourseManager.stat();
+                    courseManager.stat();
                     break;
                 case "list":
                     list(lineScanner);
@@ -98,7 +99,7 @@ public class Parser {
                     findpair(lineScanner);
                     break;
                 case "merge":
-                    CourseManager.merge();
+                    courseManager.merge();
                     break;
                 case "savestudentdata":
                     savestudentdata(lineScanner);
@@ -107,7 +108,7 @@ public class Parser {
                     savecoursedata(lineScanner);
                     break;
                 case "clearcoursedata":
-                    CourseManager.clearcoursedata();
+                    courseManager.clearcoursedata();
                     break;
                 default:
                     System.out.println("Invalid command");
@@ -129,7 +130,7 @@ public class Parser {
      */
     public static void loadstudentdata(Scanner lineScanner) {
         String arg1 = lineScanner.next();
-        CourseManager.loadstudentdata(arg1);
+        courseManager.loadstudentdata(arg1);
     }
 
 
@@ -143,7 +144,7 @@ public class Parser {
      */
     public static void loadcoursedata(Scanner lineScanner) {
         String arg1 = lineScanner.next();
-        CourseManager.loadcoursedata(arg1);
+        courseManager.loadcoursedata(arg1);
     }
 
 
@@ -164,7 +165,7 @@ public class Parser {
         catch (NumberFormatException e) {
             System.out.println("Failed parsing " + arg1 + " into an integer");
         }
-        CourseManager.section(sectionNumber);
+        courseManager.section(sectionNumber);
 
     }
 
@@ -181,7 +182,7 @@ public class Parser {
         String arg1 = lineScanner.next();
         String arg2 = lineScanner.next();
         String arg3 = lineScanner.next();
-        CourseManager.insert(arg1, arg2, arg3);
+        courseManager.insert(arg1, arg2, arg3);
     }
 
 
@@ -198,10 +199,10 @@ public class Parser {
         String arg2 = null;
         if (lineScanner.hasNext()) { // not sure about this
             arg2 = lineScanner.next();
-            CourseManager.search(arg1, arg2);
+            courseManager.search(arg1, arg2);
         }
         else {
-            CourseManager.search(arg1);
+            courseManager.search(arg1);
         }
 
     }
@@ -224,7 +225,7 @@ public class Parser {
         catch (NumberFormatException e) {
             System.out.println("Failed parsing " + arg1 + " into an integer");
         }
-        CourseManager.score(score);
+        courseManager.score(score);
 
     }
 
@@ -242,40 +243,13 @@ public class Parser {
         String arg2 = null;
         if (lineScanner.hasNext()) { // not sure about this
             arg2 = lineScanner.next();
-            CourseManager.remove(arg1, arg2);
+            courseManager.remove(arg1, arg2);
         }
         else {
-            CourseManager.remove(arg1);
+            courseManager.remove(arg1);
         }
     }
 
-
-    /**
-     * Reads arguments from the file using the passed Scanner and calls
-     * CourseManager.clearSection() with the arguments from the file.
-     * 
-     * @param lineScanner
-     *            Scanner object at the position in the file after reading the
-     *            command but before reading the arguments
-     */
-    public static void removeSection(Scanner lineScanner) {
-        if (lineScanner.hasNext()) {
-            String arg1 = lineScanner.next();
-            int alsoSectionNumber = 0;
-            try {
-                alsoSectionNumber = Integer.parseInt(arg1);
-            }
-            catch (NumberFormatException e) {
-                System.out.println("Failed parsing " + arg1
-                    + " into an integer");
-            }
-            CourseManager.clearSection(alsoSectionNumber);
-        }
-        else {
-            CourseManager.clearSection();
-        }
-
-    }
 
 
     /**
@@ -289,7 +263,7 @@ public class Parser {
     public static void list(Scanner lineScanner) {
         String arg1 = lineScanner.next();
         arg1 = Name.format(arg1);
-        CourseManager.list(arg1);
+        courseManager.list(arg1);
     }
 
 
@@ -315,7 +289,7 @@ public class Parser {
                     + " into an integer");
             }
         }
-        CourseManager.findpair(alsoScore);
+        courseManager.findpair(alsoScore);
 
     }
 
@@ -330,7 +304,7 @@ public class Parser {
      */
     public static void savestudentdata(Scanner lineScanner) {
         String arg1 = lineScanner.next();
-        CourseManager.savestudentdata(arg1);
+        courseManager.savestudentdata(arg1);
     }
 
 
@@ -344,7 +318,7 @@ public class Parser {
      */
     public static void savecoursedata(Scanner lineScanner) {
         String arg1 = lineScanner.next();
-        CourseManager.savecoursedata(arg1);
+        courseManager.savecoursedata(arg1);
     }
 
 }
