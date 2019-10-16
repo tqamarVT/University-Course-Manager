@@ -659,7 +659,7 @@ public class CourseManagerTest extends student.TestCase {
 // StudentManager.clear();
 // testCourseManager.clearcoursedata();
         systemOut().clearHistory();
-        Parser.parseFile("sampleInput.txt");
+        Parser.parseFile("searchInput.txt");
         assertFuzzyEquals(
             "Course Load Failed. You have to load Student Information file first.\r\n"
                 + "students.csv successfully loaded \r\n"

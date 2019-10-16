@@ -226,6 +226,7 @@ public class Section {
      * 
      * @param pid
      *            the pid of the record to be removed.
+     * @return whether the student was removed
      */
     public boolean remove(String pid) {
         Student studManager = StudentManager.find(pid);
@@ -250,7 +251,7 @@ public class Section {
             System.out.print("Student " + tempName.getFirst() + " " + tempName
                 .getLast() + " get removed from section " + sectionNumber
                 + " \r\n");
-            return false;
+            return true;
         }
     }
 
@@ -266,12 +267,13 @@ public class Section {
      *            first name
      * @param last
      *            last name
+     * @return PID of Student removed or null if not removed
      */
-    public boolean remove(String first, String last) {
+    public String remove(String first, String last) {
         if (!this.canRemove(first, last)) {
             System.out.print("Remove failed. Student " + first + " " + last
                 + " doesn't exist in section " + sectionNumber + "\r\n");
-            return false;
+            return null;
         }
         Name tempName = new Name(first, last);
         int tempRef = nameTree.find(tempName);
@@ -283,7 +285,7 @@ public class Section {
         scoreTree.remove(tempScore, tempRef);
         System.out.print("Student " + first + " " + last
             + " get removed from section " + sectionNumber + "\r\n");
-        return false;
+        return tempPID;
 
     }
 
@@ -376,7 +378,7 @@ public class Section {
      */
     public boolean list(String grade) {
         gradeNoPrint();
-        System.out.print("Students with grade " + grade + " are\r\n");
+        System.out.print("Students with grade " + grade + " are:\n");
         if (list == null) {
             return false;
         }
@@ -571,8 +573,9 @@ public class Section {
      *            student last name
      * @param score
      *            score for student
+     * @return whether the inserted Student overrided an existing Student
      */
-    public void insertForLoad(
+    public boolean insertForLoad(
         String pid,
         String first,
         String last,
@@ -580,16 +583,19 @@ public class Section {
         String grade) {
         // If pid is invalid, belongs to another student, or exists in this
         // section, reject the insert command.
-        Student studManager = StudentManager.find(pid);
-        if (studManager == null) {
-            System.out.print(first + " " + last
-                + " insertion failed. Wrong student information. ID doesn't exist\r\n");
-        }
-        else if (studManager.getName().compareTo(new Name(first, last)) != 0) {
-            System.out.print(first + " " + last
-                + " insertion failed. Wrong student information. ID belongs to another student\r\n");
-        }
-        else if (pidTree.find(pid) != null) {
+
+        // Already verified in SaveAndLoad
+// Student studManager = StudentManager.find(pid);
+// if (studManager == null) {
+// System.out.print(first + " " + last
+// + " insertion failed. Wrong student information. ID doesn't exist\r\n");
+// }
+// else if (studManager.getName().compareTo(new Name(first, last)) != 0) {
+// System.out.print(first + " " + last
+// + " insertion failed. Wrong student information. ID belongs to another
+// student\r\n");
+// } else
+        if (pidTree.find(pid) != null) {
             removeForLoad(pid);
             Student temp = new Student(pid, first, last);
             temp.setScore(score);
@@ -600,6 +606,7 @@ public class Section {
             dataArray.add(temp);
             scoreReference = index;
             index++;
+            return true;
         }
         else {
             Student temp = new Student(pid, first, last);
@@ -611,6 +618,7 @@ public class Section {
             dataArray.add(temp);
             scoreReference = index;
             index++;
+            return false;
         }
 
     }
