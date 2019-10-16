@@ -240,8 +240,8 @@ public class CourseManager {
     public void merge() {
         if (currentSection.getState() != SectionState.Clear) {
             System.out.println(
-                "sections could only be merged to an empty section section "
-                    + currentSectionNumber + " is not empty");
+                "sections could only be merged to an empty section. section "
+                    + currentSectionNumber + " is not empty.");
             return;
         }
         for (int i = 1; i < sections.length; i++) {
@@ -296,7 +296,7 @@ public class CourseManager {
         for (int i = 1; i < 22; i++) {
             sections[i] = new Section(i);
         }
-        System.out.print("all course data cleared\r\n");
+        System.out.print("all course data cleared.\n");
         // do I change the current section?
     }
 

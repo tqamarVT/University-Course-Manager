@@ -378,7 +378,7 @@ public class Section {
      */
     public boolean list(String grade) {
         gradeNoPrint();
-        System.out.print("Students with grade " + grade + " are\r\n");
+        System.out.print("Students with grade " + grade + " are:\n");
         if (list == null) {
             return false;
         }
