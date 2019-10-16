@@ -50,7 +50,7 @@ public class CourseManager {
      * @param fileName
      */
     public void loadcoursedata(String fileName) {
-        SaveAndLoad saveAndLoad = new SaveAndLoad(fileName);
+        saveAndLoad = new SaveAndLoad(fileName);
         courseStudentBST = saveAndLoad.loadCourseData();
         if (courseStudentBST == null) {
             return;
@@ -58,9 +58,9 @@ public class CourseManager {
         Iterator<CourseStudent> iterator = courseStudentBST.iterator();
         while (iterator.hasNext()) {
             CourseStudent next = iterator.next();
-            section(next.getSectionID());
+            sectionNoPrint(next.getSectionID());
             insertForLoad(next.getPID(), next.getName().getFirst(), next
-                .getName().getLast(), next.getScore());
+                .getName().getLast(), next.getScore(), next.getGrade());
         }
         updateStates();
         scoreFlag = false;
@@ -76,6 +76,18 @@ public class CourseManager {
         currentSection = sections[n];
         currentSectionNumber = n;
         scoreFlag = false;
+        System.out.print("switch to section " + currentSectionNumber + "\r\n");
+    }
+
+
+    public void sectionNoPrint(int n) {
+        if (n < 1 || n > 21) {
+            // invalid section, return
+            return;
+        }
+        currentSection = sections[n];
+        currentSectionNumber = n;
+        scoreFlag = false;
         // System.out.print("switch to section " + currentSectionNumber +
         // "\r\n");
     }
@@ -83,7 +95,8 @@ public class CourseManager {
 
     public void insert(String PID, String firstName, String lastName) {
         if (currentSection.getState() == SectionState.Merged) {
-            System.out.println("Cannot insert after merging.");
+            System.out.println(
+                "command insert is not valid for merged sections");
             return;
         }
         else if (!StudentManager.isInitialized()) {// change later
@@ -184,10 +197,6 @@ public class CourseManager {
 
 
     public void grade() {
-        if (currentSection.getState() == SectionState.Merged) {
-            System.out.println("Cannot grade after merging");
-            return;
-        }
         scoreFlag = currentSection.grade();
 
     }
@@ -213,7 +222,8 @@ public class CourseManager {
     public void merge() {
         if (currentSection.getState() != SectionState.Clear) {
             System.out.println(
-                "Section needs to be empty before merging to it.");
+                "sections could only be merged to an empty section section "
+                    + currentSectionNumber + " is not empty");
             return;
         }
         for (int i = 1; i < sections.length; i++) {
@@ -234,6 +244,8 @@ public class CourseManager {
                 }
             }
         }
+        System.out.print("all sections merged at section "
+            + currentSectionNumber + "\n");
         currentSection.setState(SectionState.Merged);
         scoreFlag = false;
 
@@ -255,7 +267,8 @@ public class CourseManager {
     }
 
 
-    public void savecoursedata() {
+    public void savecoursedata(String filename) {
+        saveAndLoad = new SaveAndLoad(filename);
         saveAndLoad.saveCourseData(sections);
     }
 
@@ -334,9 +347,11 @@ public class CourseManager {
         String PID,
         String firstName,
         String lastName,
-        int score) {
+        int score,
+        String grade) {
         if (currentSection.getState() == SectionState.Merged) {
-            System.out.println("Cannot insert after merging.");
+            System.out.println(
+                "command insert is not valid for merged sections");
             return;
         }
         else if (!StudentManager.isInitialized()) {// change later
@@ -350,7 +365,8 @@ public class CourseManager {
 
         }
         else {
-            currentSection.insertForLoad(PID, firstName, lastName, score);
+            currentSection.insertForLoad(PID, firstName, lastName, score,
+                grade);
         }
     }
 

@@ -311,7 +311,7 @@ public class SaveAndLoad {
                                 System.out.println("Warning: Student "
                                     + firstName + " " + lastName
                                     + " is not loaded to section " + i
-                                    + "since "
+                                    + " since "
                                     + "he/she is already enrolled in section "
                                     + String.valueOf(found.getSectionID()));
                                 return studs;
@@ -396,7 +396,7 @@ public class SaveAndLoad {
                 if (found.getSectionID() != sectionID) {
                     System.out.println("Warning: Student " + firstName + " "
                         + lastName + " is not loaded to section " + sectionID
-                        + "since " + "he/she is already enrolled in section "
+                        + " since " + "he/she is already enrolled in section "
                         + String.valueOf(found.getSectionID()));
                     lineScanner.close();
                     return result;
@@ -660,7 +660,13 @@ public class SaveAndLoad {
                     currentIndex++;
                 }
                 try {
-                    grade = currentStudent.getGrade().getBytes("UTF-8");
+                    byte[] grd = currentStudent.getGrade().getBytes("UTF-8");
+                    if(grd.length == 1) {
+                        grade[0] = grd[0];
+                    }
+                    else {
+                        grade = grd;
+                    }
                 }
                 catch (UnsupportedEncodingException e) {
                     System.out.println(

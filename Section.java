@@ -344,12 +344,34 @@ public class Section {
 
 
     /**
+     * Goes through the current section and check the score of each
+     * student,assign corresponding grades.
+     * 
+     */
+    public void gradeNoPrint() {
+        initGrades();
+        for (int i = 0; i <= index; i++) {
+            Student temp = dataArray.getAt(i);
+            if (temp == null) {
+                continue;
+            }
+            else {
+                temp.setGrade(Grades.getGrade(temp.getScore()).returnGrade());
+                grades.put(temp.getGrade(), grades.get(temp.getGrade()) + 1);
+                list.get(temp.getGrade()).add(temp);
+            }
+        }
+    }
+
+
+    /**
      * Fill in later
      * 
      * @return
      */
     public boolean stat() {
-        System.out.print("Statistics of section n:\r\n");
+        gradeNoPrint();
+        System.out.print("Statistics of section " + sectionNumber + ":\r\n");
         if (grades == null) {
             return false;
         }
@@ -374,7 +396,8 @@ public class Section {
      * 
      */
     public boolean list(String grade) {
-        System.out.print("Students with grade " + grade + " \r\n");
+        gradeNoPrint();
+        System.out.print("Students with grade " + grade + " are\r\n");
         if (list == null) {
             return false;
         }
@@ -535,14 +558,21 @@ public class Section {
 
 
     /**
-     * Makes a deep copy of this Section's Student Index
+     * Makes a deep copy of this Section's Student Index that does not include
+     * null Students
      * 
      * @return an array of all students in this section
      */
     public Student[] toArray() {
         Student[] result = new Student[pidTree.getSize()];
+        int count = 0;
+
         for (int i = 0; i < result.length; i++) {
-            result[i] = dataArray.getAt(i);
+            while (dataArray.getAt(count) == null) {
+                count++;
+            }
+            result[i] = dataArray.getAt(count);
+            count++;
         }
         return result;
     }
