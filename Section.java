@@ -344,27 +344,6 @@ public class Section {
 
 
     /**
-     * Goes through the current section and check the score of each
-     * student,assign corresponding grades.
-     * 
-     */
-    public void gradeNoPrint() {
-        initGrades();
-        for (int i = 0; i <= index; i++) {
-            Student temp = dataArray.getAt(i);
-            if (temp == null) {
-                continue;
-            }
-            else {
-                temp.setGrade(Grades.getGrade(temp.getScore()).returnGrade());
-                grades.put(temp.getGrade(), grades.get(temp.getGrade()) + 1);
-                list.get(temp.getGrade()).add(temp);
-            }
-        }
-    }
-
-
-    /**
      * Fill in later
      * 
      * @return
@@ -611,8 +590,16 @@ public class Section {
                 + " insertion failed. Wrong student information. ID belongs to another student\r\n");
         }
         else if (pidTree.find(pid) != null) {
-            System.out.print(first + " " + last + " is already in section" + " "
-                + sectionNumber + "\r\n");
+            removeForLoad(pid);
+            Student temp = new Student(pid, first, last);
+            temp.setScore(score);
+            temp.setGrade(grade);
+            pidTree.insert(pid, index);
+            nameTree.insert(new Name(first, last), index);
+            scoreTree.insert(score, index);
+            dataArray.add(temp);
+            scoreReference = index;
+            index++;
         }
         else {
             Student temp = new Student(pid, first, last);
@@ -630,6 +617,33 @@ public class Section {
 
 
     /**
+     * Fill in later
+     * 
+     * @param pid
+     * @return
+     */
+    private boolean removeForLoad(String pid) {
+        Student studManager = StudentManager.find(pid);
+        if (studManager == null) {
+            return false;
+        }
+        else if (pidTree.find(pid) == null) {
+            return false;
+        }
+        else {
+            int tempRef = pidTree.find(pid);
+            Name tempName = dataArray.getAt(tempRef).getName();
+            int tempScore = dataArray.getAt(tempRef).getScore();
+            dataArray.remove(tempRef);
+            pidTree.remove(pid, tempRef);
+            nameTree.remove(tempName, tempRef);
+            scoreTree.remove(tempScore, tempRef);
+            return false;
+        }
+    }
+
+
+    /**
      * Helper method for the grades and stat command to initalize the HashMap
      * holding the section statistics.
      */
@@ -640,6 +654,26 @@ public class Section {
         for (int i = 0; i < gradeArr.length; i++) {
             grades.put(gradeArr[i], 0);
             list.put(gradeArr[i], new ArrayList<Student>());
+        }
+    }
+
+
+    /**
+     * Fill in later.
+     * 
+     */
+    private void gradeNoPrint() {
+        initGrades();
+        for (int i = 0; i <= index; i++) {
+            Student temp = dataArray.getAt(i);
+            if (temp == null) {
+                continue;
+            }
+            else {
+                temp.setGrade(Grades.getGrade(temp.getScore()).returnGrade());
+                grades.put(temp.getGrade(), grades.get(temp.getGrade()) + 1);
+                list.get(temp.getGrade()).add(temp);
+            }
         }
     }
 
