@@ -406,12 +406,6 @@ public class Section {
             String gPlus = grade.substring(0, 1) + "+";
             String gMinus = grade.substring(0, 1) + "-";
 
-            for (int i = 0; i < list.get(g).size(); i++) {
-                String print = list.get(g).get(i).toString();
-                print = print.substring(0, print.length() - 1);
-                System.out.print(print + ", grade = " + list.get(g).get(i)
-                    .getGrade() + "\r\n");
-            }
             for (int i = 0; i < list.get(gPlus).size(); i++) {
                 String print = list.get(gPlus).get(i).toString();
                 print = print.substring(0, print.length() - 1);
@@ -422,6 +416,12 @@ public class Section {
                 String print = list.get(gMinus).get(i).toString();
                 print = print.substring(0, print.length() - 1);
                 System.out.print(print + ", grade = " + list.get(gMinus).get(i)
+                    .getGrade() + "\r\n");
+            }
+            for (int i = 0; i < list.get(g).size(); i++) {
+                String print = list.get(g).get(i).toString();
+                print = print.substring(0, print.length() - 1);
+                System.out.print(print + ", grade = " + list.get(g).get(i)
                     .getGrade() + "\r\n");
             }
             int size = list.get(g).size() + list.get(gPlus).size() + list.get(
@@ -597,7 +597,8 @@ public class Section {
         String pid,
         String first,
         String last,
-        int score) {
+        int score,
+        String grade) {
         // If pid is invalid, belongs to another student, or exists in this
         // section, reject the insert command.
         Student studManager = StudentManager.find(pid);
@@ -616,6 +617,7 @@ public class Section {
         else {
             Student temp = new Student(pid, first, last);
             temp.setScore(score);
+            temp.setGrade(grade);
             pidTree.insert(pid, index);
             nameTree.insert(new Name(first, last), index);
             scoreTree.insert(score, index);
