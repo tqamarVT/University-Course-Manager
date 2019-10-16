@@ -659,7 +659,7 @@ public class CourseManagerTest extends student.TestCase {
 // StudentManager.clear();
 // testCourseManager.clearcoursedata();
         systemOut().clearHistory();
-        Parser.parseFile("SampleInput.txt");
+        Parser.parseFile("sampleInput.txt");
         assertFuzzyEquals(
             "Course Load Failed. You have to load Student Information file first.\r\n"
                 + "students.csv successfully loaded \r\n"
@@ -772,7 +772,7 @@ public class CourseManagerTest extends student.TestCase {
                 + "All sections merged at section 5\r\n"
                 + "grading completed\r\n" + "Statistics of section 5:\r\n"
                 + "2 students with grade A\r\n" + "1 students with grade B\r\n"
-                + "1 students with grade C+\r\n" + "4 students with grade F\r\n"
+                + "4 students with grade F\r\n" + "1 students with grade C+\r\n"
                 + "Saved all Students data to mystudents.data\r\n"
                 + "Saved all course data to cs3114course.data\r\n"
                 + "All course data cleared.\r\n" + "switch to section 1\r\n"
@@ -814,7 +814,7 @@ public class CourseManagerTest extends student.TestCase {
                 + "256593948, Sandra Duncan, score = 26   \r\n"
                 + "248476061, Winter Hodge, score = 31   \r\n"
                 + "317397180, Nigel Gonzales, score = 37   \r\n"
-                + "792704751, Leroy,Sherman, score = 65   \r\n"
+                + "792704751, Leroy Sherman, score = 65   \r\n"
                 + "067964700, Fritz Hudson, score = 78   \r\n" + "Size = 6",
             systemOut().getHistory());
         systemOut().clearHistory();

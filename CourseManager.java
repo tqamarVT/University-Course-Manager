@@ -183,8 +183,7 @@ public class CourseManager {
 
 
     public void clearsection() {
-        currentSection = new Section(currentSectionNumber);
-        currentSection.setState(SectionState.Clear);
+        sections[currentSectionNumber] = new Section(currentSectionNumber);
         scoreFlag = false;
         System.out.print("Section " + currentSectionNumber + " cleared\r\n");
     }
