@@ -20,7 +20,6 @@ public class SaveAndLoad {
     private String filename;
     private final int maxNameLength = 15;
     private final int maxPIDLength = 8; // in bytes
-    private final int scoreLength = 4; // in bytes
     private final int gradeLength = 2; // in bytes
 
 
@@ -210,8 +209,7 @@ public class SaveAndLoad {
         }
         String coursename = null;
         BST<String, CourseStudent> studs = new BST<>();
-        if (filename.contains(".csv")) { // can file names contain .s? (i.e.
-                                         // fd.csv.data) (I am guessing no)
+        if (filename.contains(".csv")) {
             Scanner fileScanner = null;
             coursename = filename.substring(0, filename.length() - 4);
             System.out.println(coursename
@@ -231,110 +229,113 @@ public class SaveAndLoad {
             coursename = filename.substring(0, filename.length() - 5);
             System.out.println(coursename
                 + " Course has been successfully loaded.");
-            try {
-                byte[] bytes = Files.readAllBytes(Paths.get(filename));
-                int numSections = ((0xFF & bytes[10]) << 24) | ((0xFF
-                    & bytes[11]) << 16) | ((0xFF & bytes[12]) << 8) | (0xFF
-                        & bytes[13]); // converts byte array [10, 13] to int
-                long pid = -1;
-                String firstName = null;
-                String lastName = null;
-                int score = -1;
-                String grade = null;
-                int currentIndex = 14;
-                // System.out.println("numRecords: " + numRecords);
-                for (int i = 1; i <= numSections; i++) {
-                    int studPerSection = ((0xFF & bytes[currentIndex++]) << 24)
-                        | ((0xFF & bytes[currentIndex++]) << 16) | ((0xFF
-                            & bytes[currentIndex++]) << 8) | (0xFF
-                                & bytes[currentIndex++]);
-                    for (int j = 0; j < studPerSection; j++) {
-                        pid = ((0xFF & bytes[currentIndex++]) << 56) | ((0xFF
-                            & bytes[currentIndex++]) << 48) | ((0xFF
-                                & bytes[currentIndex++]) << 40) | ((0xFF
-                                    & bytes[currentIndex++]) << 32) | ((0xFF
-                                        & bytes[currentIndex++]) << 24) | ((0xFF
-                                            & bytes[currentIndex++]) << 16)
-                            | ((0xFF & bytes[currentIndex++]) << 8) | (0xFF
-                                & bytes[currentIndex++]);
-                        byte[] fnBytes = new byte[16];
-                        int tempIndex = 0;
-                        while (bytes[currentIndex] != 0x24) { // 0x24 == $
-                            fnBytes[tempIndex] = bytes[currentIndex];
-                            currentIndex++;
-                            tempIndex++;
-                        }
-                        currentIndex++; // because $
-                        firstName = new String(fnBytes, "UTF-8").trim();
-                        byte[] lnBytes = new byte[16];
-                        tempIndex = 0;
-                        while (bytes[currentIndex] != 0x24) { // 0x24 == $
-                            lnBytes[tempIndex] = bytes[currentIndex];
-                            currentIndex++;
-                            tempIndex++;
-                        }
-                        currentIndex++;
-                        lastName = new String(lnBytes, "UTF-8").trim();
-                        score = ((0xFF & bytes[currentIndex++]) << 24) | ((0xFF
-                            & bytes[currentIndex++]) << 16) | ((0xFF
-                                & bytes[currentIndex++]) << 8) | (0xFF
-                                    & bytes[currentIndex++]);
-                        byte[] gradeBytes = { bytes[currentIndex++],
-                            bytes[currentIndex++] };
-                        grade = new String(gradeBytes, "UTF-8").trim();
-                        String fPID = Student.formatPID(String.valueOf(pid));
-                        // verify student info
-                        if (StudentManager.find(fPID) == null) {
-                            System.out.println("Warning: Student " + firstName
-                                + " " + lastName + " is not loaded to section "
-                                + i
-                                + " since he/she doesn't exist in the loaded student records.");
-                            return studs;
-                        }
-                        Student studFound = StudentManager.find(fPID);
-                        DetailedStudent castedFound =
-                            (DetailedStudent)(studFound);
-                        if (!studFound.equals((Student)new DetailedStudent(
-                            (int)pid, firstName, castedFound.getMiddleName(),
-                            lastName))) {
-                            System.out.println("Warning: Student " + firstName
-                                + " " + lastName + " is not loaded to section "
-                                + i
-                                + " since the corresponding pid belongs to another student.");
-                            return studs;
-                        }
-                        // consider other sections
-                        if (studs.find(fPID) != null) {
-                            // need to verify, then consider different section
-                            CourseStudent found = studs.find(fPID);
-                            if (found.getSectionID() != i) {
-                                System.out.println("Warning: Student "
-                                    + firstName + " " + lastName
-                                    + " is not loaded to section " + i
-                                    + " since "
-                                    + "he/she is already enrolled in section "
-                                    + String.valueOf(found.getSectionID()));
-                                return studs;
-                            }
-                            studs.remove(fPID, studs.find(fPID));
-                        }
-                        // need to check CourseManager? Data will be inserted
-                        // later, so maybe not
-                        // score and grade will always be in .data file
-                        studs.insert(fPID, new CourseStudent(i, (int)pid,
-                            firstName, lastName, score, grade));
-                    }
-                    currentIndex += 8; // because GOHOKIES
-                }
-            }
-            catch (IOException e) {
-                // System.out.println("binary file not found to load student
-                // data");
-                return null;
-            }
+            studs = readDataFile(studs);
         }
         else {
             System.out.println("Unable to read file to load course data");
+        }
+        return studs;
+    }
+
+
+    /**
+     * Reads the .data file
+     * 
+     * @param stds
+     *            the BST into which the students go
+     * @return the BST after the students are inserted
+     */
+    private BST<String, CourseStudent> readDataFile(
+        BST<String, CourseStudent> stds) {
+        BST<String, CourseStudent> studs = stds;
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(filename));
+            int numSections = ((0xFF & bytes[10]) << 24) | ((0xFF
+                & bytes[11]) << 16) | ((0xFF & bytes[12]) << 8) | (0xFF
+                    & bytes[13]); // converts byte array [10, 13] to int
+            long pid = -1;
+            String firstName = null;
+            String lastName = null;
+            int score = -1;
+            String grade = null;
+            int currentIndex = 14;
+            for (int i = 1; i <= numSections; i++) {
+                int studPerSection = ((0xFF & bytes[currentIndex++]) << 24)
+                    | ((0xFF & bytes[currentIndex++]) << 16) | ((0xFF
+                        & bytes[currentIndex++]) << 8) | (0xFF
+                            & bytes[currentIndex++]);
+                for (int j = 0; j < studPerSection; j++) {
+                    pid = ((0xFF & bytes[currentIndex++]) << 56) | ((0xFF
+                        & bytes[currentIndex++]) << 48) | ((0xFF
+                            & bytes[currentIndex++]) << 40) | ((0xFF
+                                & bytes[currentIndex++]) << 32) | ((0xFF
+                                    & bytes[currentIndex++]) << 24) | ((0xFF
+                                        & bytes[currentIndex++]) << 16) | ((0xFF
+                                            & bytes[currentIndex++]) << 8)
+                        | (0xFF & bytes[currentIndex++]);
+                    byte[] fnBytes = new byte[16];
+                    int tempIndex = 0;
+                    while (bytes[currentIndex] != 0x24) { // 0x24 == $
+                        fnBytes[tempIndex] = bytes[currentIndex];
+                        currentIndex++;
+                        tempIndex++;
+                    }
+                    currentIndex++; // because $
+                    firstName = new String(fnBytes, "UTF-8").trim();
+                    byte[] lnBytes = new byte[16];
+                    tempIndex = 0;
+                    while (bytes[currentIndex] != 0x24) { // 0x24 == $
+                        lnBytes[tempIndex] = bytes[currentIndex];
+                        currentIndex++;
+                        tempIndex++;
+                    }
+                    currentIndex++;
+                    lastName = new String(lnBytes, "UTF-8").trim();
+                    score = ((0xFF & bytes[currentIndex++]) << 24) | ((0xFF
+                        & bytes[currentIndex++]) << 16) | ((0xFF
+                            & bytes[currentIndex++]) << 8) | (0xFF
+                                & bytes[currentIndex++]);
+                    byte[] gradeBytes = { bytes[currentIndex++],
+                        bytes[currentIndex++] };
+                    grade = new String(gradeBytes, "UTF-8").trim();
+                    String fPID = Student.formatPID(String.valueOf(pid));
+                    if (StudentManager.find(fPID) == null) {
+                        System.out.println("Warning: Student " + firstName + " "
+                            + lastName + " is not loaded to section " + i
+                            + " since he/she " + "doesn't exist in the "
+                            + "loaded student records.");
+                        return studs;
+                    }
+                    Student studFound = StudentManager.find(fPID);
+                    DetailedStudent castedFound = (DetailedStudent)(studFound);
+                    if (!studFound.equals((Student)new DetailedStudent((int)pid,
+                        firstName, castedFound.getMiddleName(), lastName))) {
+                        System.out.println("Warning: Student " + firstName + " "
+                            + lastName + " is not loaded to section " + i
+                            + " since the corresponding pid belongs "
+                            + "to another student.");
+                        return studs;
+                    }
+                    if (studs.find(fPID) != null) {
+                        CourseStudent found = studs.find(fPID);
+                        if (found.getSectionID() != i) {
+                            System.out.println("Warning: Student " + firstName
+                                + " " + lastName + " is not loaded to section "
+                                + i + " since "
+                                + "he/she is already enrolled in section "
+                                + String.valueOf(found.getSectionID()));
+                            return studs;
+                        }
+                        studs.remove(fPID, studs.find(fPID));
+                    }
+                    studs.insert(fPID, new CourseStudent(i, (int)pid, firstName,
+                        lastName, score, grade));
+                }
+                currentIndex += 8; // because GOHOKIES
+            }
+        }
+        catch (IOException e) {
+            return null;
         }
         return studs;
     }
@@ -376,7 +377,8 @@ public class SaveAndLoad {
             if (StudentManager.find(fPID) == null) {
                 System.out.println("Warning: Student " + firstName + " "
                     + lastName + " is not loaded to section " + sectionID
-                    + " since he/she doesn't exist in the loaded student records.");
+                    + " since he/she doesn't exist "
+                    + "in the loaded student records.");
                 lineScanner.close();
                 return result;
             }
@@ -386,7 +388,8 @@ public class SaveAndLoad {
                 castedFound.getMiddleName(), lastName))) {
                 System.out.println("Warning: Student " + firstName + " "
                     + lastName + " is not loaded to section " + sectionID
-                    + " since the corresponding pid belongs to another student.");
+                    + " since the corresponding pid "
+                    + "belongs to another student.");
                 lineScanner.close();
                 return result;
             }
@@ -432,7 +435,7 @@ public class SaveAndLoad {
      * Writes the information contained in the array of DetailedStudents to
      * a binary (.data) file
      * 
-     * @param students
+     * @param studs
      *            the array containing all of the DetailedStudents to write
      *            to the file
      */
@@ -476,12 +479,23 @@ public class SaveAndLoad {
         for (int i = 0; i < indexLength.length; i++) {
             toFile[i + buffer1.length] = indexLength[i];
         }
+        int currentIndex = buffer1.length + indexLength.length;
+        save(toFile, currentIndex, size, students, money, buffer2);
+    }
+
+
+    private void save(
+        byte[] toFile,
+        int currentIndex,
+        int size,
+        ArrayList<DetailedStudent> students,
+        byte[] money,
+        byte[] buffer2) {
         byte[] pid = new byte[maxPIDLength];
         byte[] fName = new byte[maxNameLength];
         byte[] mName = new byte[maxNameLength];
         byte[] lName = new byte[maxNameLength];
         DetailedStudent currentStudent = null;
-        int currentIndex = buffer1.length + indexLength.length;
         for (int i = 0; i < size; i++) {
             currentStudent = students.remove(0);
             pid = ByteBuffer.allocate(Long.BYTES).putLong(Long.parseLong(
@@ -563,7 +577,6 @@ public class SaveAndLoad {
             students.add(sections[i]);
         }
         Integer size = students.size();
-        // unsure how big a section will be (make huge)
         byte[] toFile = new byte[initialCapacity];
         String vtStudents = "CS3114atVT";
         byte[] buffer1 = new byte[10];
@@ -597,6 +610,18 @@ public class SaveAndLoad {
         for (int i = 0; i < indexLength.length; i++) {
             toFile[i + buffer1.length] = indexLength[i];
         }
+        int currentIndex = buffer1.length + indexLength.length;
+        saveC(toFile, currentIndex, size, students, money, buffer2);
+    }
+
+
+    private void saveC(
+        byte[] toFile,
+        int currentIndex,
+        int size,
+        ArrayList<Section> students,
+        byte[] money,
+        byte[] buffer2) {
         byte[] sz = new byte[Integer.BYTES]; // 4
         byte[] pid = new byte[maxPIDLength]; // 8
         byte[] fName = new byte[maxNameLength]; // 16
@@ -605,9 +630,21 @@ public class SaveAndLoad {
         byte[] grade = new byte[gradeLength]; // 2
         Section currentSection = null;
         Student currentStudent = null;
-        int currentIndex = buffer1.length + indexLength.length;
+
         for (int i = 0; i < size; i++) {
             currentSection = students.remove(0);
+            if (currentSection.getState() == SectionState.Merged) {
+                sz = ByteBuffer.allocate(Integer.BYTES).putInt(0).array();
+                for (int j = 0; j < sz.length; j++) {
+                    toFile[currentIndex] = sz[j];
+                    currentIndex++;
+                }
+                for (int j = 0; j < buffer2.length; j++) {
+                    toFile[currentIndex] = buffer2[j];
+                    currentIndex++;
+                }
+                continue;
+            }
             Student[] studInSec = currentSection.toArray();
             int sectionSize = currentSection.getSize();
             sz = ByteBuffer.allocate(Integer.BYTES).putInt(sectionSize).array();
@@ -661,7 +698,7 @@ public class SaveAndLoad {
                 }
                 try {
                     byte[] grd = currentStudent.getGrade().getBytes("UTF-8");
-                    if(grd.length == 1) {
+                    if (grd.length == 1) {
                         grade[0] = grd[0];
                     }
                     else {
@@ -682,6 +719,20 @@ public class SaveAndLoad {
                 currentIndex++;
             }
         }
+        writeC(currentIndex, toFile);
+    }
+
+
+    /**
+     * Writes the byte array toFile to file (without writing the empty space at
+     * the end)
+     * 
+     * @param currentIndex
+     *            how full the array is
+     * @param toFile
+     *            the array to be written to the file
+     */
+    private void writeC(int currentIndex, byte[] toFile) {
         byte[] finalFile = new byte[currentIndex];
         for (int i = 0; i < currentIndex; i++) {
             finalFile[i] = toFile[i];

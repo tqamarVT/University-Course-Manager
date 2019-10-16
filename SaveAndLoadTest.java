@@ -1,8 +1,6 @@
 import student.TestCase;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.ByteArrayOutputStream;
 
@@ -47,20 +45,20 @@ public class SaveAndLoadTest extends TestCase {
         twoLineS = new SaveAndLoad("TwoLineStudentData.csv");
         complicatedS = new SaveAndLoad("ComplicatedStudentData.csv");
 
-        standardS = new SaveAndLoad("students.csv");
-        taBinaryFileS = new SaveAndLoad("students.data");
+        standardS = new SaveAndLoad("students - Copy.csv");
+        taBinaryFileS = new SaveAndLoad("students - Copy.data");
 
         basicBinS = new SaveAndLoad("BasicStudentData.data");
         twoLineBinS = new SaveAndLoad("TwoLineStudentData.data");
         complicatedBinS = new SaveAndLoad("ComplicatedStudentData.data");
 
-        taCSVcourse = new SaveAndLoad("CS3114.csv");
-        taCSV2course = new SaveAndLoad("cs3114_2.csv");
+        taCSVcourse = new SaveAndLoad("CS3114 - Copy.csv");
+        taCSV2course = new SaveAndLoad("cs3114_2 - Copy.csv");
 
         myDATAcourse = new SaveAndLoad("first.data");
         myDATA2course = new SaveAndLoad("second.data");
 
-        taDATAcourse = new SaveAndLoad("cs3114.data");
+        taDATAcourse = new SaveAndLoad("cs3114 - Copy.data");
         myCSVcourse = new SaveAndLoad("CourseBinaryToCSV.csv");
 
         StudentManager.clear();
@@ -76,7 +74,7 @@ public class SaveAndLoadTest extends TestCase {
         DetailedStudent[] basicSArray = { new DetailedStudent(123456789,
             "Peter", "Gorman", "Dolan") };
 
-        DetailedStudent[] testBasicS = basicS.loadStudentData();
+        // DetailedStudent[] testBasicS = basicS.loadStudentData();
         /**
          * for (DetailedStudent d : testBasicS) {
          * System.out.println(d.getPID() + " " + d.getName().getFirst() + " "
@@ -211,7 +209,7 @@ public class SaveAndLoadTest extends TestCase {
      * to load. This loads and deletes the files.
      */
     public void testSaveAndLoadStudentDataAgain() {
-        // testSaveAndLoadStudentData();
+        testSaveAndLoadStudentData();
     }
 
 
@@ -223,8 +221,8 @@ public class SaveAndLoadTest extends TestCase {
         DetailedStudent[] removeFirst = new DetailedStudent[rawcsv.length - 1];
         for (int i = 0; i < removeFirst.length; i++) {
             removeFirst[i] = rawcsv[i + 1]; // copy all but first element
-                                            // (because first element is the
-                                            // only difference)
+            // (because first element is the
+            // only difference)
         }
         assertTrue(Arrays.equals(removeFirst, taBinaryFileS.loadStudentData()));
     }
@@ -234,7 +232,7 @@ public class SaveAndLoadTest extends TestCase {
      * tests loadCourseData with TA's .csv files
      */
     public void testLoadCourseData() {
-        StudentManager.load("students.csv");
+        StudentManager.load("students - Copy.csv");
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
         BST<String, CourseStudent> one = new BST<>();
@@ -247,7 +245,7 @@ public class SaveAndLoadTest extends TestCase {
         one.insert("256593948", new CourseStudent(2, 256593948, "Sandra",
             "Duncan", 26, "F"));
         one.inOrderTraversal();
-        String test1 = "cs3114_2 Course has been successfully loaded.\n"
+        String test1 = "cs3114_2 - Copy Course has been successfully loaded.\n"
             + outContent.toString();
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
@@ -276,7 +274,7 @@ public class SaveAndLoadTest extends TestCase {
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
         two.inOrderTraversal();
-        String test2 = "CS3114 Course has been successfully loaded.\n"
+        String test2 = "CS3114 - Copy Course has been successfully loaded.\n"
             + outContent.toString();
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
@@ -322,7 +320,7 @@ public class SaveAndLoadTest extends TestCase {
      * files for coursedata made by the TA's
      */
     public void testTACourse() {
-        StudentManager.load("students.csv");
+        StudentManager.load("students - Copy.csv");
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
@@ -358,12 +356,12 @@ public class SaveAndLoadTest extends TestCase {
     public void testSaveAndLoadCourseData() {
         if (myDATAcourse.loadCourseData() == null) { // there is no previously
             // saved file
-            StudentManager.load("students.csv");
+            StudentManager.load("students - Copy.csv");
             myDATAcourse.saveCourseData(taCSVcourse.loadCourseData());
             myDATA2course.saveCourseData(taCSV2course.loadCourseData());
         }
         else { // same as for testLoadStudentData except from .data file
-            StudentManager.load("students.csv");
+            StudentManager.load("students - Copy.csv");
             outContent = new ByteArrayOutputStream();
             System.setOut(new PrintStream(outContent));
             BST<String, CourseStudent> one = new BST<>();
@@ -412,5 +410,14 @@ public class SaveAndLoadTest extends TestCase {
             myDATAcourse.loadCourseData().inOrderTraversal();
             assertEquals(outContent.toString(), test2);
         }
+    }
+
+
+    /**
+     * need to call testSaveAndLoadCourseData() twice: once to save, and once
+     * to load. This loads and deletes the files.
+     */
+    public void testSaveAndLoadCourseDataAgain() {
+        testSaveAndLoadCourseData();
     }
 }
