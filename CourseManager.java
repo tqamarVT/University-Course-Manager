@@ -14,7 +14,7 @@ public class CourseManager {
     private Section currentSection;
     private int currentSectionNumber;
     StudentManager studentManager = null;
-    private BST<String, CourseStudent> courseStudentBST;
+    private BST<String, CourseStudent> courseStudentBST; // checks diffSection
     private Boolean scoreFlag;
     private SaveAndLoad saveAndLoad;
 
@@ -28,7 +28,7 @@ public class CourseManager {
         }
         currentSection = sections[1]; // I think
         currentSectionNumber = 1;
-
+        courseStudentBST = new BST<>();
     }
 
 
@@ -51,16 +51,16 @@ public class CourseManager {
      */
     public void loadcoursedata(String fileName) {
         saveAndLoad = new SaveAndLoad(fileName);
-        courseStudentBST = saveAndLoad.loadCourseData();
-        if (courseStudentBST == null) {
+        BST<String, CourseStudent> newLoad = saveAndLoad.loadCourseData();
+        if (newLoad == null) {
             return;
         }
-        Iterator<CourseStudent> iterator = courseStudentBST.iterator();
+        Iterator<CourseStudent> iterator = newLoad.iterator();
         while (iterator.hasNext()) {
             CourseStudent next = iterator.next();
-            section(next.getSectionID());
+            sectionNoPrint(next.getSectionID());
             insertForLoad(next.getPID(), next.getName().getFirst(), next
-                .getName().getLast(), next.getScore());
+                .getName().getLast(), next.getScore(), next.getGrade());
         }
         updateStates();
         scoreFlag = false;
@@ -76,6 +76,18 @@ public class CourseManager {
         currentSection = sections[n];
         currentSectionNumber = n;
         scoreFlag = false;
+        System.out.print("switch to section " + currentSectionNumber + "\r\n");
+    }
+
+
+    public void sectionNoPrint(int n) {
+        if (n < 1 || n > 21) {
+            // invalid section, return
+            return;
+        }
+        currentSection = sections[n];
+        currentSectionNumber = n;
+        scoreFlag = false;
         // System.out.print("switch to section " + currentSectionNumber +
         // "\r\n");
     }
@@ -83,7 +95,8 @@ public class CourseManager {
 
     public void insert(String PID, String firstName, String lastName) {
         if (currentSection.getState() == SectionState.Merged) {
-            System.out.println("Cannot insert after merging.");
+            System.out.println(
+                "command insert is not valid for merged sections");
             return;
         }
         else if (!StudentManager.isInitialized()) {// change later
@@ -98,7 +111,12 @@ public class CourseManager {
         }
         else {
             scoreFlag = currentSection.insert(PID, firstName, lastName);
-            currentSection.setState(SectionState.Occupied);
+            if (scoreFlag) {
+                courseStudentBST.insert(PID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(PID), firstName,
+                    lastName));
+                currentSection.setState(SectionState.Occupied);
+            }
         }
     }
 
@@ -151,8 +169,15 @@ public class CourseManager {
             return;
         }
         else {
-            scoreFlag = currentSection.remove(PID);
-            currentSection.setState(SectionState.Occupied);
+            scoreFlag = false;
+            currentSection.remove(PID);
+            if (scoreFlag) {
+                Student found = StudentManager.find(PID);
+                courseStudentBST.remove(PID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(PID), found.getName()
+                        .getFirst(), found.getName().getLast()));
+            }
+            updateStates();
         }
     }
 
@@ -163,17 +188,23 @@ public class CourseManager {
             return;
         }
         else {
-            scoreFlag = currentSection.remove(firstName, lastName);
-            currentSection.setState(SectionState.Occupied);
+            scoreFlag = false;
+            String removedPID = currentSection.remove(firstName, lastName);
+            if (removedPID != null) {
+                courseStudentBST.remove(removedPID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(removedPID),
+                    firstName, lastName));
+            }
+            updateStates();
         }
     }
 
 
     public void clearsection() {
-        currentSection = new Section(currentSectionNumber);
-        currentSection.setState(SectionState.Clear);
+        sections[currentSectionNumber] = new Section(currentSectionNumber);
         scoreFlag = false;
-        System.out.print("Section " + currentSectionNumber + "cleared\r\n");
+        System.out.print("Section " + currentSectionNumber + " cleared\r\n");
+        courseStudentBST = new BST<>();
     }
 
 
@@ -184,10 +215,6 @@ public class CourseManager {
 
 
     public void grade() {
-        if (currentSection.getState() == SectionState.Merged) {
-            System.out.println("Cannot grade after merging");
-            return;
-        }
         scoreFlag = currentSection.grade();
 
     }
@@ -213,7 +240,8 @@ public class CourseManager {
     public void merge() {
         if (currentSection.getState() != SectionState.Clear) {
             System.out.println(
-                "Section needs to be empty before merging to it.");
+                "sections could only be merged to an empty section section "
+                    + currentSectionNumber + " is not empty");
             return;
         }
         for (int i = 1; i < sections.length; i++) {
@@ -229,11 +257,13 @@ public class CourseManager {
                     else {
                         currentSection.insertForLoad(temp[j].getPID(), temp[j]
                             .getName().getFirst(), temp[j].getName().getLast(),
-                            temp[j].getScore());
+                            temp[j].getScore(), temp[j].getGrade());
                     }
                 }
             }
         }
+        System.out.print("all sections merged at section "
+            + currentSectionNumber + "\n");
         currentSection.setState(SectionState.Merged);
         scoreFlag = false;
 
@@ -266,6 +296,7 @@ public class CourseManager {
         for (int i = 1; i < 22; i++) {
             sections[i] = new Section(i);
         }
+        System.out.print("all course data cleared\r\n");
         // do I change the current section?
     }
 
@@ -287,10 +318,11 @@ public class CourseManager {
         if (courseStudentBST.find(PID) == null) {
             return false;
         }
-        else if (courseStudentBST.find(PID).getName().compareTo(new Name(
-            firstName, lastName)) != 0) {
-            return false;
-        }
+        // Already checked in SaveAndLoad/insert has wrong error priority
+// else if (courseStudentBST.find(PID).getName().compareTo(new Name(
+// firstName, lastName)) != 0) {
+// return false;
+// }
         else if (courseStudentBST.find(PID)
             .getSectionID() != currentSectionNumber) {
             return true;
@@ -311,6 +343,9 @@ public class CourseManager {
             if (sections[i].getSize() != 0 && sections[i]
                 .getState() != SectionState.Merged) {
                 sections[i].setState(SectionState.Occupied);
+            }
+            else if (sections[i].getState() != SectionState.Merged) {
+                sections[i].setState(SectionState.Clear);
             }
         }
     }
@@ -335,23 +370,37 @@ public class CourseManager {
         String PID,
         String firstName,
         String lastName,
-        int score) {
+        int score,
+        String grade) {
         if (currentSection.getState() == SectionState.Merged) {
-            System.out.println("Cannot insert after merging.");
+            System.out.println(
+                "command insert is not valid for merged sections");
             return;
         }
-        else if (!StudentManager.isInitialized()) {// change later
-            System.out.println("Cannot insert until student data is loaded.");
-            return;
-        }
+        // Tested in SaveAndLoad:
+// else if (!StudentManager.isInitialized()) {// change later
+// System.out.println("Cannot insert until student data is loaded.");
+// return;
+// }
         else if (inDiffSection(PID, firstName, lastName)) {
-            System.out.println(firstName + " " + lastName
-                + " is already registered in a different section\r\n");
+            System.out.println("Warning: Student " + firstName + " " + lastName
+                + " is not loaded to section " + String.valueOf(
+                    currentSectionNumber)
+                + " since he/she is already enrolled in section " + String
+                    .valueOf(courseStudentBST.find(PID).getSectionID()));
             return;
 
         }
         else {
-            currentSection.insertForLoad(PID, firstName, lastName, score);
+            boolean wasOverwrite = currentSection.insertForLoad(PID, firstName,
+                lastName, score, grade);
+            // assert Student was inserted
+            if (!wasOverwrite) { // name will be wrong but w/e
+                courseStudentBST.insert(PID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(PID), firstName,
+                    lastName));
+            }
+
         }
     }
 

@@ -224,7 +224,7 @@ public class Parser {
      */
     public static void searchid(Scanner lineScanner) {
         String arg1 = lineScanner.next();
-        courseManager.list(arg1);
+        courseManager.searchid(arg1);
     }
 
 
