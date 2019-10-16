@@ -239,7 +239,7 @@ public class CourseManager {
                     else {
                         currentSection.insertForLoad(temp[j].getPID(), temp[j]
                             .getName().getFirst(), temp[j].getName().getLast(),
-                            temp[j].getScore());
+                            temp[j].getScore(), temp[j].getGrade());
                     }
                 }
             }
