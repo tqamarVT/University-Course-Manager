@@ -186,7 +186,7 @@ public class CourseManager {
         currentSection = new Section(currentSectionNumber);
         currentSection.setState(SectionState.Clear);
         scoreFlag = false;
-        System.out.print("Section " + currentSectionNumber + "cleared\r\n");
+        System.out.print("Section " + currentSectionNumber + " cleared\r\n");
     }
 
 
@@ -278,6 +278,7 @@ public class CourseManager {
         for (int i = 1; i < 22; i++) {
             sections[i] = new Section(i);
         }
+        System.out.print("all course data cleared\r\n");
         // do I change the current section?
     }
 
