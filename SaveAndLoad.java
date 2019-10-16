@@ -660,7 +660,13 @@ public class SaveAndLoad {
                     currentIndex++;
                 }
                 try {
-                    grade[0] = currentStudent.getGrade().getBytes("UTF-8")[0];
+                    byte[] grd = currentStudent.getGrade().getBytes("UTF-8");
+                    if(grd.length == 1) {
+                        grade[0] = grd[0];
+                    }
+                    else {
+                        grade = grd;
+                    }
                 }
                 catch (UnsupportedEncodingException e) {
                     System.out.println(
