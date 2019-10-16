@@ -13,14 +13,14 @@ public enum Grades {
 
     A(100, "A"),
     AMINUS(89, "A-"),
-    BPLUS(85, "B+"),
+    BPLUS(84, "B+"),
     B(79, "B"),
-    BMINUS(75, "B-"),
+    BMINUS(74, "B-"),
     CPLUS(69, "C+"),
-    C(65, "C"),
+    C(64, "C"),
     CMINUS(59, "C-"),
     DPLUS(57, "D+"),
-    D(55, "D"),
+    D(54, "D"),
     DMINUS(52, "D-"),
     F(49, "F");
 
