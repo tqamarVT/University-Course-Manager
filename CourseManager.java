@@ -71,7 +71,6 @@ public class CourseManager {
 
     public void section(int n) {
         if (n < 1 || n > 21) {
-            // invalid section, return
             scoreFlag = false;
             return;
         }
@@ -84,13 +83,11 @@ public class CourseManager {
 
     public void sectionNoPrint(int n) {
         if (n < 1 || n > 21) {
-            // invalid section, return
             return;
         }
         currentSection = sections[n];
         currentSectionNumber = n;
-        // System.out.print("switch to section " + currentSectionNumber +
-        // "\r\n");
+
     }
 
 
@@ -101,7 +98,7 @@ public class CourseManager {
             scoreFlag = false;
             return;
         }
-        else if (!StudentManager.isInitialized()) {// change later
+        else if (!StudentManager.isInitialized()) {
             System.out.println("Cannot insert until student data is loaded.");
             scoreFlag = false;
             return;
@@ -179,8 +176,7 @@ public class CourseManager {
             return;
         }
         else {
-            scoreFlag = false;
-            currentSection.remove(PID);
+            scoreFlag = currentSection.remove(PID);
             if (scoreFlag) {
                 Student found = StudentManager.find(PID);
                 courseStudentBST.remove(PID, new CourseStudent(
@@ -309,13 +305,11 @@ public class CourseManager {
 
 
     public void clearcoursedata() {
-        // maybe save course data somewhere first?
         for (int i = 1; i < 22; i++) {
             sections[i] = new Section(i);
         }
         currentSection = sections[currentSectionNumber];
         System.out.print("all course data cleared.\n");
-        // do I change the current section?
         scoreFlag = false;
     }
 

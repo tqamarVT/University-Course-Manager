@@ -172,6 +172,7 @@ public class Section {
             }
             if (temp.getName().getFirst().compareToIgnoreCase(name) == 0 || temp
                 .getName().getLast().compareToIgnoreCase(name) == 0) {
+                scoreReference = i;
                 System.out.print(temp.toString());
                 count++;
             }
