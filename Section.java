@@ -379,6 +379,7 @@ public class Section {
      */
     public boolean list(String grade) {
         gradeNoPrint();
+        int size = 0;
         System.out.print("Students with grade " + grade + " are:\n");
         if (list == null) {
             return false;
@@ -388,37 +389,48 @@ public class Section {
             String gPlus = grade.substring(0, 1) + "+";
             String gMinus = grade.substring(0, 1) + "-";
 
-            for (int i = 0; i < list.get(gPlus).size(); i++) {
-                String print = list.get(gPlus).get(i).toString();
-                print = print.substring(0, print.length() - 1);
-                System.out.print(print + ", grade = " + list.get(gPlus).get(i)
-                    .getGrade() + "\r\n");
+            if (list.get(gPlus) != null) {
+                for (int i = 0; i < list.get(gPlus).size(); i++) {
+                    String print = list.get(gPlus).get(i).toString();
+                    print = print.substring(0, print.length() - 1);
+                    System.out.print(print + ", grade = " + list.get(gPlus).get(
+                        i).getGrade() + "\r\n");
+                }
+                size = size + list.get(gPlus).size();
             }
-            for (int i = 0; i < list.get(gMinus).size(); i++) {
-                String print = list.get(gMinus).get(i).toString();
-                print = print.substring(0, print.length() - 1);
-                System.out.print(print + ", grade = " + list.get(gMinus).get(i)
-                    .getGrade() + "\r\n");
+
+            if (list.get(gMinus) != null) {
+                for (int i = 0; i < list.get(gMinus).size(); i++) {
+                    String print = list.get(gMinus).get(i).toString();
+                    print = print.substring(0, print.length() - 1);
+                    System.out.print(print + ", grade = " + list.get(gMinus)
+                        .get(i).getGrade() + "\r\n");
+                }
+                size = size + list.get(gMinus).size();
             }
-            for (int i = 0; i < list.get(g).size(); i++) {
-                String print = list.get(g).get(i).toString();
-                print = print.substring(0, print.length() - 1);
-                System.out.print(print + ", grade = " + list.get(g).get(i)
-                    .getGrade() + "\r\n");
+
+            if (list.get(g) != null) {
+                for (int i = 0; i < list.get(g).size(); i++) {
+                    String print = list.get(g).get(i).toString();
+                    print = print.substring(0, print.length() - 1);
+                    System.out.print(print + ", grade = " + list.get(g).get(i)
+                        .getGrade() + "\r\n");
+                }
+                size = size + list.get(g).size();
             }
-            int size = list.get(g).size() + list.get(gPlus).size() + list.get(
-                gMinus).size();
             System.out.print("Found " + size + " students\r\n");
         }
         else {
-            for (int i = 0; i < list.get(grade).size(); i++) {
-                String print = list.get(grade).get(i).toString();
-                print = print.substring(0, print.length() - 1);
-                System.out.print(print + ", grade = " + list.get(grade).get(i)
-                    .getGrade() + "\r\n");
+            if (list.get(grade) != null) {
+                for (int i = 0; i < list.get(grade).size(); i++) {
+                    String print = list.get(grade).get(i).toString();
+                    print = print.substring(0, print.length() - 1);
+                    System.out.print(print + ", grade = " + list.get(grade).get(
+                        i).getGrade() + "\r\n");
+                    size = list.get(grade).size();
+                }
             }
-            System.out.print("Found " + list.get(grade).size()
-                + " students\r\n");
+            System.out.print("Found " + size + " students\r\n");
         }
         return false;
     }
