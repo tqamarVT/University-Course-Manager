@@ -6,11 +6,12 @@
  * Test class for the student class.
  * 
  * @author Taimoor Qamar
+ * @version 2019.10.17
  *
  */
 public class StudentTest extends student.TestCase {
     // FIELD
-    Student testStudent;
+    private Student testStudent;
 
 
     /**
@@ -21,6 +22,9 @@ public class StudentTest extends student.TestCase {
     }
 
 
+    /**
+     * Tests the formatPID method for all conditions.
+     */
     public void testFormatPID() {
         assertEquals(testStudent.getPID(), "000000000");
         testStudent = new Student("1", "Pepe", "TheFrog");
@@ -43,7 +47,6 @@ public class StudentTest extends student.TestCase {
         assertEquals(testStudent.getPID(), "111111111");
         testStudent = new Student(null, "Pepe", "TheFrog");
         assertNull(testStudent.getPID());
-        
-        
+
     }
 }

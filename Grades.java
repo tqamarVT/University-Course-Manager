@@ -10,18 +10,53 @@
  *
  */
 public enum Grades {
-
+    /**
+     * Letter grade A.
+     */
     A(100, "A"),
+    /**
+     * Letter grade A-.
+     */
     AMINUS(89, "A-"),
+    /**
+     * Letter grade B+.
+     */
     BPLUS(84, "B+"),
+    /**
+     * Letter grade B.
+     */
     B(79, "B"),
+    /**
+     * Letter grade B-.
+     */
     BMINUS(74, "B-"),
+    /**
+     * Letter grade C+.
+     */
     CPLUS(69, "C+"),
+    /**
+     * Letter grade C.
+     */
     C(64, "C"),
+    /**
+     * Letter grade C-.
+     */
     CMINUS(59, "C-"),
+    /**
+     * Letter grade D+.
+     */
     DPLUS(57, "D+"),
+    /**
+     * Letter grade D.
+     */
     D(54, "D"),
+    /**
+     * Letter grade D-.
+     */
     DMINUS(52, "D-"),
+    /**
+     * Letter grade F.
+     */
     F(49, "F");
 
     private final int score;
@@ -70,6 +105,11 @@ public enum Grades {
     }
 
 
+    /**
+     * Returns an array of strings of all the letter grades.
+     * 
+     * @return am array of letter grades.
+     */
     public static String[] getGradeArr() {
         int i = 0;
         String[] ret = new String[12];

@@ -24,7 +24,7 @@ public class Section {
     // FIELDS
     private StudentIndex<Student> dataArray; // Array to store student/section
                                              // data
-    private BST<String, Integer> pidTree; // BST for PID
+    private BST<String, Integer> pIDTree; // BST for pID
     private BST<Name, Integer> nameTree; // BST for name
     private BST<Integer, Integer> scoreTree; // BST for score
     private HashMap<String, Integer> grades;
@@ -44,7 +44,7 @@ public class Section {
      */
     public Section(int sectionNumber) {
         dataArray = new StudentIndex<Student>();
-        pidTree = new BST<String, Integer>();
+        pIDTree = new BST<String, Integer>();
         nameTree = new BST<Name, Integer>();
         scoreTree = new BST<Integer, Integer>();
         this.sectionNumber = sectionNumber;
@@ -54,31 +54,42 @@ public class Section {
 
 
     // ----------------------------------------------------------
+
     /**
-     * Inserts a record into the dataArray after verification of unique pid.
+     * Inserts a record into the dataArray after verification of unique pID.
+     * 
+     * @param pID
+     *            the pID of the student to insert.
+     * @param first
+     *            the first name of the student to insert.
+     * @param last
+     *            the last name of the student to insert.
+     * @return boolean value indicating if insert was successful.
      */
-    public boolean insert(String pid, String first, String last) {
-        // If pid is invalid, belongs to another student, or exists in this
+    public boolean insert(String pID, String first, String last) {
+        // If pID is invalid, belongs to another student, or exists in this
         // section, reject the insert command.
-        Student studManager = StudentManager.find(pid);
+        Student studManager = StudentManager.find(pID);
         if (studManager == null) {
             System.out.print(first + " " + last
-                + " insertion failed. Wrong student information. ID doesn't exist\r\n");
+                + " insertion failed. Wrong student information. "
+                + "ID doesn't exist\r\n");
             return false;
         }
         else if (studManager.getName().compareTo(new Name(first, last)) != 0) {
             System.out.print(first + " " + last
-                + " insertion failed. Wrong student information. ID belongs to another student\r\n");
+                + " insertion failed. Wrong student information. "
+                + "ID belongs to another student\r\n");
             return false;
         }
-        else if (pidTree.find(pid) != null) {
+        else if (pIDTree.find(pID) != null) {
             System.out.print(first + " " + last + " is already in section" + " "
                 + sectionNumber + "\r\n");
             return false;
         }
         else {
-            Student temp = new Student(pid, first, last);
-            pidTree.insert(pid, index);
+            Student temp = new Student(pID, first, last);
+            pIDTree.insert(pID, index);
             nameTree.insert(new Name(first, last), index);
             scoreTree.insert(temp.getScore(), index);
             dataArray.add(temp);
@@ -95,19 +106,20 @@ public class Section {
     // ----------------------------------------------------------
     /**
      * Searches for the specific student record in the current section with the
-     * pid # given. If that pid # is not found in the current section, prints
+     * pID # given. If that pID # is not found in the current section, prints
      * out an error message. Otherwise, prints out the corresponding record.
      * 
-     * @param pid
-     *            the pid # to search for
+     * @param pID
+     *            the pID # to search for
+     * @return a boolean value indicated if the search was succesful.
      */
-    public boolean searchId(String PID) {
-        if (pidTree.find(PID) == null) {
+    public boolean searchId(String pID) {
+        if (pIDTree.find(pID) == null) {
             System.out.print("Search Failed. Couldn't find any student with ID "
-                + PID + "\r\n");
+                + pID + "\r\n");
             return false;
         }
-        scoreReference = pidTree.find(PID);
+        scoreReference = pIDTree.find(pID);
         System.out.print("Found " + dataArray.getAt(scoreReference).toString());
         return true;
     }
@@ -123,6 +135,8 @@ public class Section {
      *            first name
      * @param last
      *            last name
+     * @return boolean value indicating if the search was successful or not, for
+     *         updating the scoreFlag.
      */
     public boolean search(String first, String last) {
         Name tempName = new Name(first, last);
@@ -144,12 +158,7 @@ public class Section {
         System.out.print(first + " " + last + " was found in " + numRecords
             + " records in section " + sectionNumber + "\r\n");
 
-        if (numRecords == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return numRecords == 1;
     }
 
 
@@ -161,6 +170,8 @@ public class Section {
      * 
      * @param name
      *            The first or last name of the student.
+     * @return boolean value indicating if the search was successful for the
+     *         scoreFlag.
      */
     public boolean search(String name) {
         int count = 0;
@@ -182,12 +193,7 @@ public class Section {
         }
         System.out.print(name + " " + "was found in " + count + " "
             + "records in section " + sectionNumber + "\n");
-        if (count == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return count == 1;
     }
 
 
@@ -198,6 +204,7 @@ public class Section {
      * 
      * @param score
      *            The score to set
+     * @return boolean false for the scoreFlag.
      */
     public boolean score(int score) {
         if (score < 0 || score > 100) {
@@ -220,33 +227,33 @@ public class Section {
 
     // ----------------------------------------------------------
     /**
-     * Removes the record in the current section with the given pid #. If there
+     * Removes the record in the current section with the given pID #. If there
      * is no such a student, or this student is not enrolled in this section,
      * prints out an error message. Otherwise, the record associated with that
      * name is removed from the section.
      * 
-     * @param pid
-     *            the pid of the record to be removed.
+     * @param pID
+     *            the pID of the record to be removed.
      * @return whether the student was removed
      */
-    public boolean remove(String pid) {
-        Student studManager = StudentManager.find(pid);
+    public boolean remove(String pID) {
+        Student studManager = StudentManager.find(pID);
         if (studManager == null) {
             System.out.print("Remove failed: couldn't find any student with id "
-                + pid + "\r\n");
+                + pID + "\r\n");
             return false;
         }
-        else if (pidTree.find(pid) == null) {
+        else if (pIDTree.find(pID) == null) {
             System.out.print("Remove failed: couldn't find any student with id "
-                + pid + "\r\n");
+                + pID + "\r\n");
             return false;
         }
         else {
-            int tempRef = pidTree.find(pid);
+            int tempRef = pIDTree.find(pID);
             Name tempName = dataArray.getAt(tempRef).getName();
             int tempScore = dataArray.getAt(tempRef).getScore();
             dataArray.remove(tempRef);
-            pidTree.remove(pid, tempRef);
+            pIDTree.remove(pID, tempRef);
             nameTree.remove(tempName, tempRef);
             scoreTree.remove(tempScore, tempRef);
             System.out.print("Student " + tempName.getFirst() + " " + tempName
@@ -268,7 +275,7 @@ public class Section {
      *            first name
      * @param last
      *            last name
-     * @return PID of Student removed or null if not removed
+     * @return pID of Student removed or null if not removed
      */
     public String remove(String first, String last) {
         if (!this.canRemove(first, last)) {
@@ -279,14 +286,14 @@ public class Section {
         Name tempName = new Name(first, last);
         int tempRef = nameTree.find(tempName);
         int tempScore = dataArray.getAt(tempRef).getScore();
-        String tempPID = dataArray.getAt(tempRef).getPID();
+        String temppID = dataArray.getAt(tempRef).getPID();
         dataArray.remove(tempRef);
-        pidTree.remove(tempPID, tempRef);
+        pIDTree.remove(temppID, tempRef);
         nameTree.remove(tempName, tempRef);
         scoreTree.remove(tempScore, tempRef);
         System.out.print("Student " + first + " " + last
             + " get removed from section " + sectionNumber + "\r\n");
-        return tempPID;
+        return temppID;
 
     }
 
@@ -294,17 +301,19 @@ public class Section {
     // ----------------------------------------------------------
     /**
      * For each BST node in each BST, prints that node's brief student record
-     * (pid #, name, and score). After all three BSTs are printed, prints out
+     * (pID #, name, and score). After all three BSTs are printed, prints out
      * the size of the data.
+     * 
+     * @return boolean false for the scoreFlag.
      */
     public boolean dumpSection() {
         System.out.print("Section" + " " + sectionNumber + " " + "dump:\n");
-        Iterator<Integer> pidIterator = pidTree.iterator();
+        Iterator<Integer> pIDIterator = pIDTree.iterator();
         Iterator<Integer> nameIterator = nameTree.iterator();
         Iterator<Integer> scoreIterator = scoreTree.iterator();
         System.out.print("BST by ID:\r\n");
-        while (pidIterator.hasNext()) {
-            int tempIndex = pidIterator.next();
+        while (pIDIterator.hasNext()) {
+            int tempIndex = pIDIterator.next();
             System.out.print(dataArray.getAt(tempIndex).toString());
         }
         System.out.print("BST by name:\r\n");
@@ -317,7 +326,7 @@ public class Section {
             int tempIndex = scoreIterator.next();
             System.out.print(dataArray.getAt(tempIndex).toString());
         }
-        System.out.print("Size = " + pidTree.getSize() + "\r\n");
+        System.out.print("Size = " + pIDTree.getSize() + "\r\n");
         return false;
     }
 
@@ -327,6 +336,7 @@ public class Section {
      * Goes through the current section and check the score of each
      * student,assign corresponding grades.
      * 
+     * @return boolean false for the scoreFlag.
      */
     public boolean grade() {
         initGrades();
@@ -347,9 +357,9 @@ public class Section {
 
 
     /**
-     * Fill in later
+     * Report how many students are in each grade level, from A to F.
      * 
-     * @return
+     * @return boolean false for the scoreFlag.
      */
     public boolean stat() {
         gradeNoPrint();
@@ -375,7 +385,7 @@ public class Section {
      * 
      * @param grade
      *            The grade to gather data on.
-     * 
+     * @return boolean false for the scoreFlag.
      */
     public boolean list(String grade) {
         gradeNoPrint();
@@ -437,9 +447,12 @@ public class Section {
 
 
     /**
-     * Fill in later
+     * Report all student pairs whose scores are within a difference given by
+     * (less than or equal to) <score>.
      * 
      * @param score
+     *            The score with which to set the range to search in.
+     * @return boolean false for the scoreFlag.
      */
     public boolean findPair(int score) {
         int lowerBound = 0;
@@ -493,10 +506,11 @@ public class Section {
      * section has one and only one record matching the name provided.
      * 
      * @param first
-     *            first name
+     *            first name of student to be removed.
      * @param last
-     *            last name
-     * @return true or false
+     *            last name of student to be removed.
+     * @return true if student cant be removed, or false.
+     * 
      */
     private boolean canRemove(String first, String last) {
         Name tempName = new Name(first, last);
@@ -510,12 +524,7 @@ public class Section {
             }
         }
 
-        if (numRecords == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return numRecords == 1;
     }
 
 
@@ -547,7 +556,7 @@ public class Section {
      * @return the size
      */
     public int getSize() {
-        return pidTree.getSize();
+        return pIDTree.getSize();
     }
 
 
@@ -558,7 +567,7 @@ public class Section {
      * @return an array of all students in this section
      */
     public Student[] toArray() {
-        Student[] result = new Student[pidTree.getSize()];
+        Student[] result = new Student[pIDTree.getSize()];
         int count = 0;
 
         for (int i = 0; i < result.length; i++) {
@@ -578,42 +587,31 @@ public class Section {
      * loadcoursedata process, and that scoreFlag is not manipulated in either
      * class.
      * 
-     * @param pid
-     *            student pid
+     * @param pID
+     *            student pID
      * @param first
      *            student first name
      * @param last
      *            student last name
      * @param score
      *            score for student
+     * @param grade
+     *            letter grade for the student.
      * @return whether the inserted Student overrided an existing Student
      */
     public boolean insertForLoad(
-        String pid,
+        String pID,
         String first,
         String last,
         int score,
         String grade) {
-        // If pid is invalid, belongs to another student, or exists in this
-        // section, reject the insert command.
 
-        // Already verified in SaveAndLoad
-// Student studManager = StudentManager.find(pid);
-// if (studManager == null) {
-// System.out.print(first + " " + last
-// + " insertion failed. Wrong student information. ID doesn't exist\r\n");
-// }
-// else if (studManager.getName().compareTo(new Name(first, last)) != 0) {
-// System.out.print(first + " " + last
-// + " insertion failed. Wrong student information. ID belongs to another
-// student\r\n");
-// } else
-        if (pidTree.find(pid) != null) {
-            removeForLoad(pid);
-            Student temp = new Student(pid, first, last);
+        if (pIDTree.find(pID) != null) {
+            removeForLoad(pID);
+            Student temp = new Student(pID, first, last);
             temp.setScore(score);
             temp.setGrade(grade);
-            pidTree.insert(pid, index);
+            pIDTree.insert(pID, index);
             nameTree.insert(new Name(first, last), index);
             scoreTree.insert(score, index);
             dataArray.add(temp);
@@ -622,10 +620,10 @@ public class Section {
             return true;
         }
         else {
-            Student temp = new Student(pid, first, last);
+            Student temp = new Student(pID, first, last);
             temp.setScore(score);
             temp.setGrade(grade);
-            pidTree.insert(pid, index);
+            pIDTree.insert(pID, index);
             nameTree.insert(new Name(first, last), index);
             scoreTree.insert(score, index);
             dataArray.add(temp);
@@ -638,25 +636,27 @@ public class Section {
 
 
     /**
-     * Fill in later
+     * Helper method for overwriting old student data during course load,
+     * without printing to the screen.
      * 
-     * @param pid
+     * @param pID
+     *            of student to be removed during course load overwrite.
      * @return
      */
-    private boolean removeForLoad(String pid) {
-        Student studManager = StudentManager.find(pid);
+    private boolean removeForLoad(String pID) {
+        Student studManager = StudentManager.find(pID);
         if (studManager == null) {
             return false;
         }
-        else if (pidTree.find(pid) == null) {
+        else if (pIDTree.find(pID) == null) {
             return false;
         }
         else {
-            int tempRef = pidTree.find(pid);
+            int tempRef = pIDTree.find(pID);
             Name tempName = dataArray.getAt(tempRef).getName();
             int tempScore = dataArray.getAt(tempRef).getScore();
             dataArray.remove(tempRef);
-            pidTree.remove(pid, tempRef);
+            pIDTree.remove(pID, tempRef);
             nameTree.remove(tempName, tempRef);
             scoreTree.remove(tempScore, tempRef);
             return false;

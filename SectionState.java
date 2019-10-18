@@ -13,5 +13,16 @@
  *
  */
 public enum SectionState {
-    Clear, Occupied, Merged
+    /**
+     * Section is empty
+     */
+    Clear,
+    /**
+     * Section contains student data.
+     */
+    Occupied,
+    /**
+     * Section is a current combination of all other occupied sections.
+     */
+    Merged
 }

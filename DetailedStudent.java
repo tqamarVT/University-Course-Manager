@@ -84,6 +84,8 @@ public class DetailedStudent extends Student implements Comparable<Student> {
      * a positive number. If this has a smaller PID, returns a negative number.
      * If the PIDs are equal, returns 0.
      * 
+     * @param other
+     *            the other student to compare to.
      * @return If this has a larger PID, returns
      *         a positive number. If this has a smaller PID, returns a negative
      *         number.

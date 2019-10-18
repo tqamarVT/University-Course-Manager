@@ -1,0 +1,100 @@
+loadcoursedata random.csv
+
+loadstudentdata studentrandom.csv [OR: loadstudentdata students.data]
+
+
+loadcoursedata random.csv
+
+section 1
+
+
+dumpsection
+insert 977159896 Naomi Cote
+
+insert 256593948 Sandra Duncan
+
+insert 239721904 Aileen   Ford
+
+insert 239721905 Caleb   Foley
+insert 239721905    Aileen Ford
+score 91
+
+searchid 394691224
+score 100
+searchid 291935757
+score 100
+searchid 239721905
+
+search Mostafa Kamel
+
+search Sage Forbes
+
+search Naomi
+dumpsection
+
+remove Mostafa Kamel
+
+remove Naomi Cote
+
+search Naomi 
+
+remove Naomi Cote
+
+section 3
+dumpsection
+insert 349195701 Gloria     Chavez
+score 100
+
+grade
+section 1
+grade
+stat
+
+merge 
+section 4
+merge
+insert 635043110 Ishmael   Carlson
+grade
+stat
+
+list C*
+
+section 2
+
+list C*
+list F
+list C+
+list C-
+list C
+
+remove 256593948
+findpair 10
+
+dumpsection
+section 3
+
+clearsection
+
+section 4
+merge
+
+section 5
+merge
+grade
+stat
+
+savestudentsdata mystudents.data
+savecoursedata cs3114course.data
+
+clearcoursedata
+
+section 1
+dumpsection
+
+loadcoursedata randomCourse3.csv
+section 1
+dumpsection
+
+loadcoursedata randomCourse3.csv
+section 2
+dumpsection

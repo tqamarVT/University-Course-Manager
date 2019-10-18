@@ -484,6 +484,16 @@ public class SaveAndLoad {
     }
 
 
+    /**
+     * Helper method for the save student data function.
+     * 
+     * @param toFile
+     * @param currentIndex
+     * @param size
+     * @param students
+     * @param money
+     * @param buffer2
+     */
     private void save(
         byte[] toFile,
         int currentIndex,
@@ -615,6 +625,16 @@ public class SaveAndLoad {
     }
 
 
+    /**
+     * Helper method for the saveCourseData method.
+     * 
+     * @param toFile
+     * @param currentIndex
+     * @param size
+     * @param students
+     * @param money
+     * @param buffer2
+     */
     private void saveC(
         byte[] toFile,
         int currentIndex,

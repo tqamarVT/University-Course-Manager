@@ -64,6 +64,9 @@ public class BST<K extends Comparable<K>, V extends Comparable<V>> {
      *
      * @param key
      *            the key of the node to remove.
+     * @param value
+     *            the value held by the node.
+     * 
      * 
      */
     public void remove(K key, V value) {
@@ -112,6 +115,8 @@ public class BST<K extends Comparable<K>, V extends Comparable<V>> {
      *
      * @param key
      *            the key of node to search for.
+     * @param value
+     *            the value of the node to search for.
      * @return the matching item or null if not found.
      */
     public V findByValue(K key, V value) {

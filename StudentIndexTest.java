@@ -15,7 +15,7 @@
  */
 public class StudentIndexTest extends student.TestCase {
     // FIELDS
-    StudentIndex<Student> testStudentIndex;
+    private StudentIndex<Student> testStudentIndex;
 
 
     /**
@@ -96,8 +96,8 @@ public class StudentIndexTest extends student.TestCase {
         assertNull(temp);
 
         // CASE 2: NON-NULL CASE
+        temp = new Student("01006", "Pizza", "Gate");
         testStudentIndex.add(new Student("01006", "Pizza", "Gate"));
-        temp = testStudentIndex.getAt(0);
-        assertTrue(temp.equals(new Student("01006", "Pizza", "Gate")));
+        assertEquals(temp, testStudentIndex.getAt(0));
     }
 }

@@ -127,8 +127,8 @@ public class CourseStudent extends Student
     /**
      * Changes the student's sectionID
      * 
-     * @param identification
-     *            number used in the section
+     * @param secID
+     *            the id of the section this student belongs to.
      */
     public void setSectionID(int secID) {
         sectionId = secID;

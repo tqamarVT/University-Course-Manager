@@ -33,9 +33,11 @@ public class Student {
      *            The first name of the student.
      * @param last
      *            The last name of the student.
+     * @param pID
+     *            the pid of the student.
      */
-    public Student(String PID, String first, String last) {
-        this.pid = Student.formatPID(PID);
+    public Student(String pID, String first, String last) {
+        this.pid = Student.formatPID(pID);
         name = new Name(first, last);
         score = 0;
         grade = "F";
@@ -44,6 +46,8 @@ public class Student {
 
     /**
      * Getter method for the Name field.
+     * 
+     * @return the Name field.
      */
     public Name getName() {
         return name;
@@ -74,8 +78,8 @@ public class Student {
     /**
      * Setter method for the score.
      * 
-     * @param score
-     *            field variable score
+     * @param grade
+     *            field variable grade
      */
     public void setGrade(String grade) {
         this.grade = grade;
@@ -142,12 +146,7 @@ public class Student {
                 return false;
             }
 
-            else if (this.name.compareTo(other.getName()) != 0) {
-                return false;
-            }
-            else {
-                return true;
-            }
+            return this.name.compareTo(other.getName()) == 0;
 
         }
 

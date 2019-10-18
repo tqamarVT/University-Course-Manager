@@ -14,6 +14,7 @@ import java.util.Arrays;
  */
 public class StudentManager {
     private static DetailedStudent[] sortedArray;
+    @SuppressWarnings("unused") // Called statically.
     private static SaveAndLoad saveAndLoad;
 
 
@@ -88,7 +89,7 @@ public class StudentManager {
      * Creates a .data file with the given filename (given filename must include
      * .data) that stores all of the information in this StudentManager.
      * 
-     * @param filename
+     * @param fileName
      *            where to save this
      */
     public static void save(String fileName) {
@@ -107,7 +108,7 @@ public class StudentManager {
      * include
      * .data or .csv) that stores all of the information in this StudentManager.
      * 
-     * @param filename
+     * @param fileName
      *            file from which to load
      */
     public static void load(String fileName) {

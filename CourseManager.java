@@ -7,13 +7,13 @@ import java.util.Iterator;
 /**
  * @author Taimoor Qamar
  * @author Peter Dolan
+ * @version 2019.10.17
  *
  */
 public class CourseManager {
     private Section[] sections = new Section[22]; // [1,21]
     private Section currentSection;
     private int currentSectionNumber;
-    StudentManager studentManager = null;
     private BST<String, CourseStudent> courseStudentBST; // checks diffSection
     private Boolean scoreFlag;
     private SaveAndLoad saveAndLoad;
@@ -36,6 +36,7 @@ public class CourseManager {
      * Initializes the Static StudentManager class with Student data.
      * 
      * @param fileName
+     *            The file holding the student data.
      */
     public void loadstudentdata(String fileName) {
         StudentManager.load(fileName);
@@ -48,6 +49,7 @@ public class CourseManager {
      * Initializes the CourseManager class with Course data.
      * 
      * @param fileName
+     *            The file holding the course data.
      */
     public void loadcoursedata(String fileName) {
         saveAndLoad = new SaveAndLoad(fileName);
@@ -69,6 +71,12 @@ public class CourseManager {
     }
 
 
+    /**
+     * Method used to change the currentSection field variable.
+     * 
+     * @param n
+     *            the section id.
+     */
     public void section(int n) {
         if (n < 1 || n > 21) {
             scoreFlag = false;
@@ -81,6 +89,13 @@ public class CourseManager {
     }
 
 
+    /**
+     * <ethod used to change the currentSection field variable, without the
+     * system printing anything to the screen. Useful for loading course data.
+     * 
+     * @param n
+     *            the section id.
+     */
     public void sectionNoPrint(int n) {
         if (n < 1 || n > 21) {
             return;
@@ -91,7 +106,18 @@ public class CourseManager {
     }
 
 
-    public void insert(String PID, String firstName, String lastName) {
+    /**
+     * Enrolls a student with <pID #> and a name given by that <first name> and
+     * <last name> to the current section.
+     * 
+     * @param pID
+     *            the pID of the student.
+     * @param firstName
+     *            the first name of the student.
+     * @param lastName
+     *            the last name of the student.
+     */
+    public void insert(String pID, String firstName, String lastName) {
         if (currentSection.getState() == SectionState.Merged) {
             System.out.println(
                 "command insert is not valid for merged sections");
@@ -103,7 +129,7 @@ public class CourseManager {
             scoreFlag = false;
             return;
         }
-        else if (inDiffSection(PID, firstName, lastName)) {
+        else if (inDiffSection(pID, firstName, lastName)) {
             System.out.println(firstName + " " + lastName
                 + " is already registered in a different section");
             scoreFlag = false;
@@ -111,10 +137,10 @@ public class CourseManager {
 
         }
         else {
-            scoreFlag = currentSection.insert(PID, firstName, lastName);
+            scoreFlag = currentSection.insert(pID, firstName, lastName);
             if (scoreFlag) {
-                courseStudentBST.insert(PID, new CourseStudent(
-                    currentSectionNumber, Integer.parseInt(PID), firstName,
+                courseStudentBST.insert(pID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(pID), firstName,
                     lastName));
                 currentSection.setState(SectionState.Occupied);
             }
@@ -122,16 +148,32 @@ public class CourseManager {
     }
 
 
-    public void searchid(String PID) {
+    /**
+     * Searches for the specific student record in the current section with the
+     * pID # given.
+     * 
+     * @param pID
+     *            the pID of the student to search for.
+     */
+    public void searchid(String pID) {
         if (currentSection.getState() == SectionState.Merged) {
             System.out.println("Cannot search after merging");
             scoreFlag = false;
             return;
         }
-        scoreFlag = currentSection.searchId(PID);
+        scoreFlag = currentSection.searchId(pID);
     }
 
 
+    /**
+     * Searches for all student records in the current section with the name
+     * given by <first name> and <last name>.
+     * 
+     * @param firstName
+     *            the first name of the student.
+     * @param lastName
+     *            the last name of the student.
+     */
     public void search(String firstName, String lastName) {
         if (currentSection.getState() == SectionState.Merged) {
             System.out.println("Cannot search after merging");
@@ -142,6 +184,13 @@ public class CourseManager {
     }
 
 
+    /**
+     * Report all students in the current section that have the specific <name>.
+     * Note that this name may appear in either first name or last name.
+     * 
+     * @param name
+     *            Either first or last name of studen to search for.
+     */
     public void search(String name) {
         if (currentSection.getState() == SectionState.Merged) {
             System.out.println("Cannot search after merging");
@@ -152,6 +201,13 @@ public class CourseManager {
     }
 
 
+    /**
+     * Assigns a score given by <number> for the specific student last
+     * referenced by one of the valid pre-score method calls.
+     * 
+     * @param score
+     *            the score value to update.
+     */
     public void score(int score) {
         if (currentSection.getState() == SectionState.Merged) {
             System.out.println("Cannot score after merging");
@@ -169,18 +225,26 @@ public class CourseManager {
     }
 
 
-    public void remove(String PID) {
+    /**
+     * Removes the record in the current section with the given pID #. If there
+     * is no such a student, or this student is not enrolled in the current
+     * section, returns out of the method.
+     * 
+     * @param pID
+     *            the pID of the student to remove.
+     */
+    public void remove(String pID) {
         if (currentSection.getState() == SectionState.Merged) {
             System.out.println("Cannot remove after merging.");
             scoreFlag = false;
             return;
         }
         else {
-            scoreFlag = currentSection.remove(PID);
+            scoreFlag = currentSection.remove(pID);
             if (scoreFlag) {
-                Student found = StudentManager.find(PID);
-                courseStudentBST.remove(PID, new CourseStudent(
-                    currentSectionNumber, Integer.parseInt(PID), found.getName()
+                Student found = StudentManager.find(pID);
+                courseStudentBST.remove(pID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(pID), found.getName()
                         .getFirst(), found.getName().getLast()));
             }
             updateStates();
@@ -188,6 +252,16 @@ public class CourseManager {
     }
 
 
+    /**
+     * Removes the record in the current section with the name given by <first
+     * name> <lastname>. If there are multiple students with this full name or
+     * there is no such a student in the current section, the method returns.
+     * 
+     * @param firstName
+     *            the first name of the student to remove.
+     * @param lastName
+     *            the last name of the student to remove.
+     */
     public void remove(String firstName, String lastName) {
         if (currentSection.getState() == SectionState.Merged) {
             System.out.println("Cannot remove after merging.");
@@ -196,10 +270,10 @@ public class CourseManager {
         }
         else {
             scoreFlag = false;
-            String removedPID = currentSection.remove(firstName, lastName);
-            if (removedPID != null) {
-                courseStudentBST.remove(removedPID, new CourseStudent(
-                    currentSectionNumber, Integer.parseInt(removedPID),
+            String removedpID = currentSection.remove(firstName, lastName);
+            if (removedpID != null) {
+                courseStudentBST.remove(removedpID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(removedpID),
                     firstName, lastName));
             }
             updateStates();
@@ -207,6 +281,9 @@ public class CourseManager {
     }
 
 
+    /**
+     * Removes all records associated with the current section..
+     */
     public void clearsection() {
         sections[currentSectionNumber] = new Section(currentSectionNumber);
         currentSection = sections[currentSectionNumber];
@@ -216,23 +293,39 @@ public class CourseManager {
     }
 
 
+    /**
+     * Returns a “dump” of the three BSTs associated with the current section.
+     */
     public void dumpsection() {
         scoreFlag = currentSection.dumpSection();
 
     }
 
 
+    /**
+     * Goes through the current section and check the score of each student,
+     * assign corresponding letter grades.
+     */
     public void grade() {
         scoreFlag = currentSection.grade();
 
     }
 
 
+    /**
+     * Reports how many students are in each grade level, from A to F.
+     */
     public void stat() {
         scoreFlag = currentSection.stat();
     }
 
 
+    /**
+     * List all students that are in particular grade level(s) given by <grade>.
+     * 
+     * @param grade
+     *            the grade for which to list the student records
+     */
     public void list(String grade) {
         String formattedGrade = Name.format(grade);
         scoreFlag = currentSection.list(formattedGrade);
@@ -240,11 +333,23 @@ public class CourseManager {
     }
 
 
+    /**
+     * Reports all student pairs whose scores are within a difference given by
+     * (less than or equal to) <score> in the current section. If no <score> is
+     * given, then the default value is 0, which means that the pair should have
+     * the same score.
+     * 
+     * @param score
+     *            the score which estabilishes the range to search in.
+     */
     public void findpair(int score) {
         scoreFlag = currentSection.findPair(score);
     }
 
 
+    /**
+     * Merges all occupied course sections into one separate section.
+     */
     public void merge() {
         if (currentSection.getState() != SectionState.Clear) {
             System.out.println(
@@ -297,6 +402,12 @@ public class CourseManager {
     }
 
 
+    /**
+     * Saves all course data into a binary file.
+     * 
+     * @param filename
+     *            the name of the file to create and save to.
+     */
     public void savecoursedata(String filename) {
         saveAndLoad = new SaveAndLoad(filename);
         saveAndLoad.saveCourseData(sections);
@@ -304,6 +415,10 @@ public class CourseManager {
     }
 
 
+    /**
+     * Saves the coursedata info and clear all BST and array space associated
+     * with the course.
+     */
     public void clearcoursedata() {
         for (int i = 1; i < 22; i++) {
             sections[i] = new Section(i);
@@ -318,23 +433,18 @@ public class CourseManager {
      * Helper method for the insert method, determines if the student being
      * inserted into the currentSection already exists in another section.
      * 
-     * @return true if pid matches name passed, and exists in another section.
+     * @return true if pID matches name passed, and exists in another section.
      *         false for all other conditions.
      */
     private boolean inDiffSection(
-        String PID,
+        String pID,
         String firstName,
         String lastName) {
-        if (courseStudentBST.find(PID) == null) {
+        if (courseStudentBST.find(pID) == null) {
             return false;
         }
-        else if (courseStudentBST.find(PID)
-            .getSectionID() != currentSectionNumber) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return courseStudentBST.find(pID)
+            .getSectionID() != currentSectionNumber;
 
     }
 
@@ -362,8 +472,8 @@ public class CourseManager {
      * loadcoursedata process, and that scoreFlag is not manipulated.
      * 
      * 
-     * @param PID
-     *            pid of the student
+     * @param pID
+     *            pID of the student
      * @param firstName
      *            first name of the student
      * @param lastName
@@ -372,7 +482,7 @@ public class CourseManager {
      *            score of the student
      */
     private void insertForLoad(
-        String PID,
+        String pID,
         String firstName,
         String lastName,
         int score,
@@ -383,34 +493,25 @@ public class CourseManager {
             return;
         }
 
-        else if (inDiffSection(PID, firstName, lastName)) {
+        else if (inDiffSection(pID, firstName, lastName)) {
             System.out.println("Warning: Student " + firstName + " " + lastName
                 + " is not loaded to section " + String.valueOf(
                     currentSectionNumber)
                 + " since he/she is already enrolled in section " + String
-                    .valueOf(courseStudentBST.find(PID).getSectionID()));
+                    .valueOf(courseStudentBST.find(pID).getSectionID()));
             return;
 
         }
         else {
-            boolean wasOverwrite = currentSection.insertForLoad(PID, firstName,
+            boolean wasOverwrite = currentSection.insertForLoad(pID, firstName,
                 lastName, score, grade);
             // assert Student was inserted
             if (!wasOverwrite) { // name will be wrong but w/e
-                courseStudentBST.insert(PID, new CourseStudent(
-                    currentSectionNumber, Integer.parseInt(PID), firstName,
+                courseStudentBST.insert(pID, new CourseStudent(
+                    currentSectionNumber, Integer.parseInt(pID), firstName,
                     lastName));
             }
 
         }
     }
-
-
-    /**
-     * For testing purposes.
-     */
-    public void getSectionState() {
-        System.out.print(currentSection.getState().toString() + "\n");
-    }
-
 }

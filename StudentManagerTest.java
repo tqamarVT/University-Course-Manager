@@ -9,7 +9,6 @@
  */
 public class StudentManagerTest extends student.TestCase {
 
-
     /**
      * sets up the fields before every testF
      */
@@ -25,8 +24,9 @@ public class StudentManagerTest extends student.TestCase {
         assertNull(StudentManager.find("121212121"));
         assertNull(StudentManager.find("64678619"));
         assertNull(StudentManager.find("564678619"));
-        assertEquals(StudentManager.find("111111111"), new DetailedStudent(111111111,
-            "Peter", "", "Dolan"));
+        assertEquals(StudentManager.find("111111111"), 
+            new DetailedStudent(
+            111111111, "Peter", "", "Dolan"));
         StudentManager.clear();
     }
 

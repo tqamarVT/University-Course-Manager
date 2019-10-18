@@ -3,11 +3,14 @@
  */
 
 /**
- * This class is used for storage of student and section data.
  * 
  * @author Taimoor Qamar
  * @version 2019.26.09
- *
+ * 
+ *          This class is used for storage of student and section data.
+ * 
+ * @param <T>
+ *            Generic type.
  */
 public class StudentIndex<T> {
 
@@ -40,6 +43,7 @@ public class StudentIndex<T> {
      * 
      * @param index
      *            The index from which to return the object.
+     * @return the object located at the index.
      */
     public T getAt(int index) {
         if (array[index] == null) {
@@ -56,6 +60,7 @@ public class StudentIndex<T> {
      * Add an element to the end of the array.
      * 
      * @param element
+     *            the element to add to the array.
      */
     public void add(T element) {
         if (arrEnd == capacity) {
@@ -73,6 +78,7 @@ public class StudentIndex<T> {
      * 
      * @param index
      *            The index of the location of the object to remove.
+     * @return the object removed from the array.
      */
     public T remove(int index) {
         if (array[index] == null) {
@@ -102,7 +108,7 @@ public class StudentIndex<T> {
     /**
      * Returns the current capacity of the array.
      * 
-     * @return
+     * @return the current max capacity of the array.
      */
     public int getCapacity() {
         return capacity;
