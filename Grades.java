@@ -1,8 +1,4 @@
 /**
- * 
- */
-
-/**
  * Enumerator class for the Grades;
  * 
  * @author Taimoor Qamar
