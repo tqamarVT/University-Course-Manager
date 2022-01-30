@@ -3,16 +3,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * // Virginia Tech Honor Code Pledge:
- * //
- * // As a Hokie, I will conduct myself with honor and integrity at all times.
- * // I will not lie, cheat, or steal, nor will I accept the actions of those
- * // who do.
- * //
- * 
- */
-
-/**
  * Section class which holds student and course data. Stores the student data in
  * three separate BSTs and stores section data in a StudentIndex object.
  * 
