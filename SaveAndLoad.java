@@ -12,8 +12,8 @@ import java.util.Iterator;
 /**
  * Handles reading from and writing to .csv and .data files
  * 
- * @author Peter Dolan
- * @version 9/28/19
+ * @author Taimoor Qamar (tqamar)
+ * @version 2019.07.15
  */
 public class SaveAndLoad {
     private final int initialCapacity = 100000;
