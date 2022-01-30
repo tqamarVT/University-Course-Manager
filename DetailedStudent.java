@@ -2,8 +2,8 @@
  * Student that contains more information such as a middle name (used for the
  * student manager)
  * 
- * @author Peter Dolan
- * @version 9/28/19
+ * @author Taimoor Qamar (tqamar)
+ * @version 2019.07.15
  *
  */
 public class DetailedStudent extends Student implements Comparable<Student> {
