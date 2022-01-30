@@ -1,15 +1,10 @@
 import java.util.Arrays;
 
 /**
- * 
- */
-
-/**
  * The StudentManager class stores information about all Students and can find a
  * Student when given the Student's pid.
  * 
  * @author Taimoor Qamar
- * @author Peter Dolan
  * @version 10/5/19
  */
 public class StudentManager {
