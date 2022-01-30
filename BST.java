@@ -2,7 +2,7 @@ import java.util.Iterator;
 
 /**
  * This class represents a Binary Search Tree, a container class used to hold
- * data. This code was created/used in 2114 - Taimoor Qamar.
+ * data. 
  * *
  * 
  * @author Taimoor Qamar
