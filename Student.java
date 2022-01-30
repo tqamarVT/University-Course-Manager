@@ -1,20 +1,10 @@
 import java.util.Arrays;
 
 /**
- * // Virginia Tech Honor Code Pledge:
- * //
- * // As a Hokie, I will conduct myself with honor and integrity at all times.
- * // I will not lie, cheat, or steal, nor will I accept the actions of those
- * // who do.
- * //
- * 
- */
-/**
  * This is the student class, designed to hold student information and return it
  * upon invocation.
  * 
  * @author Taimoor Qamar
- * @author Peter Dolan
  * @version 2019.09.02
  *
  */
