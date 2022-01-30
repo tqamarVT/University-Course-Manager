@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 /**
  * @author Taimoor Qamar
- * @author Peter Dolan
  * @version 2019.10.17
  *
  */
@@ -294,7 +293,7 @@ public class CourseManager {
 
 
     /**
-     * Returns a “dump” of the three BSTs associated with the current section.
+     * Returns a Â“dumpÂ” of the three BSTs associated with the current section.
      */
     public void dumpsection() {
         scoreFlag = currentSection.dumpSection();
