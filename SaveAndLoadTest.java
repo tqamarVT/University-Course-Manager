@@ -7,8 +7,8 @@ import java.io.ByteArrayOutputStream;
 /**
  * Tests the SaveAndLoad class using premade .csv files
  * 
- * @author Peter Dolan
- * @version 9/29/19
+ * @author Taimoor Qamar (tqamar)
+ * @version 2019.07.15
  *
  */
 public class SaveAndLoadTest extends TestCase {
