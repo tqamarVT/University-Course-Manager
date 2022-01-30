@@ -4,7 +4,7 @@
  *
  */
 
-public class Coursemanager2 {
+public class Main {
     
 
     /**
