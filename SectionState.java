@@ -1,4 +1,3 @@
-
 /**
  * All of the possible modes for a section
  * 
