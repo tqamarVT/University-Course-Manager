@@ -1,8 +1,3 @@
-/**
- * 
- */
-
-
 import java.util.EmptyStackException;
 
 /**
