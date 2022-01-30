@@ -1,8 +1,8 @@
 /**
  * Student record information stored in the course manager
  * 
- * @author Peter Dolan
- * @version 9/29/19
+ * @author Taimoor Qamar (tqamar)
+ * @version 2019.07.15
  *
  */
 public class CourseStudent extends Student
