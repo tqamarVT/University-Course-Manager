@@ -4,7 +4,6 @@
 
 /**
  * @author Taimoor Qamar
- * @author Peter Dolan
  * @version 10/5/19
  */
 public class StudentManagerTest extends student.TestCase {
@@ -26,7 +25,7 @@ public class StudentManagerTest extends student.TestCase {
         assertNull(StudentManager.find("564678619"));
         assertEquals(StudentManager.find("111111111"), 
             new DetailedStudent(
-            111111111, "Peter", "", "Dolan"));
+            111111111, "Taimoor", "", "Qamar"));
         StudentManager.clear();
     }
 
