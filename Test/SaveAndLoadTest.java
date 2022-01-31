@@ -72,7 +72,7 @@ public class SaveAndLoadTest extends TestCase {
         // System.out.println(new File(".").getAbsolutePath());
         // basic testing:
         DetailedStudent[] basicSArray = { new DetailedStudent(123456789,
-            "Peter", "Gorman", "Dolan") };
+            "Taimoor", "G", "Qamar") };
 
 // DetailedStudent[] testBasicS = basicS.loadStudentData();
         /**
@@ -88,8 +88,8 @@ public class SaveAndLoadTest extends TestCase {
          */
         assertTrue(Arrays.equals(basicS.loadStudentData(), basicSArray));
         DetailedStudent[] twoLineSArray = { new DetailedStudent(123456789,
-            "Peter", "Gorman", "Dolan"), new DetailedStudent(987654321, "Peter",
-                "Sweeney", "Dolan") };
+            "Taimoor", "G", "Qamar"), new DetailedStudent(987654321, "Taimoor",
+                "S", "Qamar") };
         /**
          * DetailedStudent[] testTwoLine = twoLineS.loadStudentData().toArray(
          * twoLineSArray);
@@ -101,10 +101,10 @@ public class SaveAndLoadTest extends TestCase {
         assertTrue(Arrays.equals(twoLineS.loadStudentData(), twoLineSArray));
         // more complicated testing:
         DetailedStudent[] complicatedSArray = { new DetailedStudent(123456789,
-            "Peter", "Gorman", "Dolan"), new DetailedStudent(987654321, "Peter",
-                "Sweeney", "Dolan"), new DetailedStudent(135798642, "Peter", "",
-                    "Dolan"), new DetailedStudent(111111111, "Peter", "",
-                        "Dolan"), new DetailedStudent(222222222,
+            "Taimoor", "G", "Qamar"), new DetailedStudent(987654321, "Taimoor",
+                "S", "Qamar"), new DetailedStudent(135798642, "Taimoor", "",
+                    "Qamar"), new DetailedStudent(111111111, "Taimoor", "",
+                        "Qamar"), new DetailedStudent(222222222,
                             "Fifteenlettersf", "Fun", "Maximumchracter") };
 
         /**
@@ -146,17 +146,17 @@ public class SaveAndLoadTest extends TestCase {
         }
         else { // same as for testLoadStudentData except from .data file
             DetailedStudent[] basicSArray = { new DetailedStudent(123456789,
-                "Peter", "Gorman", "Dolan") };
+                "Taimoor", "G", "Qamar") };
 
             DetailedStudent[] twoLineSArray = { new DetailedStudent(123456789,
-                "Peter", "Gorman", "Dolan"), new DetailedStudent(987654321,
-                    "Peter", "Sweeney", "Dolan") };
+                "Taimoor", "G", "Qamar"), new DetailedStudent(987654321,
+                    "Taimoor", "S", "Qamar") };
 
             DetailedStudent[] complicatedSArray = { new DetailedStudent(
-                123456789, "Peter", "Gorman", "Dolan"), new DetailedStudent(
-                    987654321, "Peter", "Sweeney", "Dolan"),
-                new DetailedStudent(135798642, "Peter", "", "Dolan"),
-                new DetailedStudent(111111111, "Peter", "", "Dolan"),
+                123456789, "Taimoor", "G", "Qamar"), new DetailedStudent(
+                    987654321, "Taimoor", "S", "Qamar"),
+                new DetailedStudent(135798642, "Taimoor", "", "Qamar"),
+                new DetailedStudent(111111111, "Taimoor", "", "Qamar"),
                 new DetailedStudent(222222222, "Fifteenlettersf", "Fun",
                     "Maximumchracter") };
 
