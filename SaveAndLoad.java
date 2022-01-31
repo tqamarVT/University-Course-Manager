@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.util.Iterator;
 
 /**
- * Handles reading from and writing to .csv and .data files
+ * Handles reading from and writing to .csv and binary .data files
  * 
  * @author Taimoor Qamar (tqamar)
  * @version 2019.07.15
